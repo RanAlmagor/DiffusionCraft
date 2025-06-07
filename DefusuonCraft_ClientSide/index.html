@@ -3,19 +3,66 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DiffusionCraft | Home</title>
+    <title>DefusionCraft Web</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <header class="hero">
-      <h1>Welcome to DiffusionCraft</h1>
-      <p>Create stunning AI-generated images in seconds.</p>
-      <a
-        href="https://us-east-1wdjdde8sj.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=340veg7vfq5qnjo86v1hpp16fe&redirect_uri=http://diffusioncraft-client.s3-website-us-east-1.amazonaws.com/create.html"
-        class="btn-primary"
-      >
-        Get Started
-      </a>
+    <!-- Navbar -->
+    <header class="navbar">
+      <div class="container">
+        <h1 class="logo">DefusionCraft Web</h1>
+        <nav class="nav-links">
+          <a href="#">Home</a>
+          <a href="https://your-cognito-auth-link.com">Authentication</a>
+        </nav>
+      </div>
     </header>
+
+    <!-- Main Gallery -->
+    <main class="main-content">
+      <h2 class="section-title">Explore AI-Generated Art</h2>
+      <div class="gallery">
+        <div class="image-card">
+          <img
+            src="https://placehold.co/400x300/0a0a0a/00fff7?text=Image+1"
+            alt="AI Image"
+          />
+        </div>
+        <div class="image-card">
+          <img
+            src="https://placehold.co/400x300/0a0a0a/00fff7?text=Image+2"
+            alt="AI Image"
+          />
+        </div>
+        <div class="image-card">
+          <img
+            src="https://placehold.co/400x300/0a0a0a/00fff7?text=Image+3"
+            alt="AI Image"
+          />
+        </div>
+      </div>
+    </main>
+
+    <!-- Chat Container -->
+    <div id="chat-container"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      &copy; 2025 DefusionCraft. All rights reserved.
+    </footer>
+
+    <!-- Scripts -->
+    <script src="main.js"></script>
+    <script>
+      // Load the chat HTML into the page
+      fetch("web components/chat.html")
+        .then((res) => res.text())
+        .then((html) => {
+          document.getElementById("chat-container").innerHTML = html;
+        })
+        .catch((err) => {
+          console.error("Failed to load chat component:", err);
+        });
+    </script>
   </body>
 </html>

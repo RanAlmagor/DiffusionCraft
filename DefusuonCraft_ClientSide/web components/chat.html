@@ -1,0 +1,18 @@
+<!-- Gemini Chat Bubble + Window -->
+<div id="gemini-bubble" class="gemini-bubble" onclick="toggleChat()">💬</div>
+
+<div id="chat-box" class="chat-box hidden">
+  <div class="chat-header">
+    DefusionCraft Assistant
+    <button onclick="toggleChat()">✖</button>
+  </div>
+  <div class="chat-body">
+    <div class="chat-log" id="chat-log"></div>
+    <input
+      type="text"
+      id="chat-input"
+      placeholder="Ask something..."
+      onkeydown="handleKey(event)"
+    />
+  </div>
+</div>
