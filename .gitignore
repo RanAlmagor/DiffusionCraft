@@ -176,3 +176,4 @@ cython_debug/
 DefusuonCraft_ServerSide/secrets.env
 
 DefusuonCraft_ServerSide/secrets.env
+*.env
