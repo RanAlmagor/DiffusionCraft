@@ -5,11 +5,11 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((html) => {
       document.getElementById("navbar-container").innerHTML = html;
 
-      // רק אחרי שה-navbar נטען לדף נטען גם את הסקריפט שמפעיל את ההסתרה / הצגה
-      const script = document.createElement("script");
-      script.src = "js/auth-handler.js";
-      script.defer = true;
-      document.body.appendChild(script);
+      // ✅ Load auth-handler.js only after navbar is injected
+      const authScript = document.createElement("script");
+      authScript.src = "js/auth-handler.js";
+      authScript.defer = true;
+      document.body.appendChild(authScript);
     })
     .catch((err) => {
       console.error("Failed to load navbar:", err);
