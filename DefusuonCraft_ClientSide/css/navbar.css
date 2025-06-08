@@ -15,10 +15,11 @@
   align-items: flex-start;
   z-index: 1000;
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+  overflow: hidden;
 }
 
 .logo {
-  font-size: 1.7rem;
+  font-size: 1.4rem;
   color: #00fff7;
   font-weight: 700;
   text-shadow: 0 0 10px #00fff7;
