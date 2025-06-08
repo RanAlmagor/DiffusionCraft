@@ -54,3 +54,6 @@
   text-shadow: 0 0 6px #00fff7;
   transform: translateX(2px);
 }
+.hidden {
+  display: none !important;
+}
