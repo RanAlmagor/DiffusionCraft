@@ -173,5 +173,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 # Local configuration files
-secrets.env
+DefusuonCraft_ServerSide/secrets.env
 
