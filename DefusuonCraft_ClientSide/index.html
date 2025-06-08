@@ -7,32 +7,11 @@
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/chat.css" />
     <link rel="stylesheet" href="css/image-card.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
   </head>
   <body>
     <!-- Navbar -->
-    <header class="navbar">
-      <div class="navbar-left">
-        <h1 class="logo">DefusionCraft</h1>
-        <nav class="nav-links">
-          <a
-            href="gallery.html"
-            id="personal-gallery-link"
-            class="nav-link hidden"
-            >🎨 My Gallery</a
-          >
-          <a href="admin.html" id="admin-link" class="nav-link hidden"
-            >🛠 Admin</a
-          >
-          <a href="#" id="logout-link" class="nav-link hidden">🚪 Logout</a>
-          <a
-            href="https://your-cognito-auth-link.com"
-            id="login-link"
-            class="nav-link"
-            >🔐 Login</a
-          >
-        </nav>
-      </div>
-    </header>
+    <div id="navbar-container"></div>
 
     <!-- Main Gallery -->
     <main class="main-content">
@@ -51,6 +30,7 @@
     <!-- Scripts -->
     <script src="js/main.js"></script>
     <script src="js/gallery-loader.js"></script>
-    <script src="js/chat-loader.js"></script>
+    <script src="js/auth-handler.js"></script>
+    <script src="js/navbar-loader.js"></script>
   </body>
 </html>

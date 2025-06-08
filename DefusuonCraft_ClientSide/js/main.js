@@ -1,10 +1,5 @@
 // File: js/main.js
 
-// Toggle chat visibility
-function toggleChat() {
-  document.getElementById("chat-box").classList.toggle("hidden");
-}
-
 // Handle enter key in chat input
 function handleKey(e) {
   if (e.key === "Enter") {
