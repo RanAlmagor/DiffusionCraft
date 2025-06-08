@@ -5,15 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DefusionCraft Web</title>
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/chat.css" />
+    <link rel="stylesheet" href="css/image-card.css" />
   </head>
   <body>
     <!-- Navbar -->
     <header class="navbar">
-      <div class="container">
-        <h1 class="logo">DefusionCraft Web</h1>
+      <div class="navbar-left">
+        <h1 class="logo">DefusionCraft</h1>
         <nav class="nav-links">
-          <a href="#">Home</a>
-          <a href="https://your-cognito-auth-link.com">Authentication</a>
+          <a
+            href="gallery.html"
+            id="personal-gallery-link"
+            class="nav-link hidden"
+            >🎨 My Gallery</a
+          >
+          <a href="admin.html" id="admin-link" class="nav-link hidden"
+            >🛠 Admin</a
+          >
+          <a href="#" id="logout-link" class="nav-link hidden">🚪 Logout</a>
+          <a
+            href="https://your-cognito-auth-link.com"
+            id="login-link"
+            class="nav-link"
+            >🔐 Login</a
+          >
         </nav>
       </div>
     </header>
@@ -21,26 +37,7 @@
     <!-- Main Gallery -->
     <main class="main-content">
       <h2 class="section-title">Explore AI-Generated Art</h2>
-      <div class="gallery">
-        <div class="image-card">
-          <img
-            src="https://placehold.co/400x300/0a0a0a/00fff7?text=Image+1"
-            alt="AI Image"
-          />
-        </div>
-        <div class="image-card">
-          <img
-            src="https://placehold.co/400x300/0a0a0a/00fff7?text=Image+2"
-            alt="AI Image"
-          />
-        </div>
-        <div class="image-card">
-          <img
-            src="https://placehold.co/400x300/0a0a0a/00fff7?text=Image+3"
-            alt="AI Image"
-          />
-        </div>
-      </div>
+      <div class="gallery" id="gallery"></div>
     </main>
 
     <!-- Chat Container -->
@@ -52,17 +49,8 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="main.js"></script>
-    <script>
-      // Load the chat HTML into the page
-      fetch("web components/chat.html")
-        .then((res) => res.text())
-        .then((html) => {
-          document.getElementById("chat-container").innerHTML = html;
-        })
-        .catch((err) => {
-          console.error("Failed to load chat component:", err);
-        });
-    </script>
+    <script src="js/main.js"></script>
+    <script src="js/gallery-loader.js"></script>
+    <script src="js/chat-loader.js"></script>
   </body>
 </html>
