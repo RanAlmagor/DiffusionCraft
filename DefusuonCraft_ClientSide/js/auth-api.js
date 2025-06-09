@@ -1,6 +1,6 @@
 export async function fetchUserStatus() {
   try {
-    const res = await fetch("http://localhost:8001/", {
+    const res = await fetch("http://localhost:8000/", {
       credentials: "include",
     });
     const data = await res.json();
@@ -13,7 +13,7 @@ export async function fetchUserStatus() {
 
 export async function logoutUser() {
   try {
-    await fetch("http://localhost:8001/logout", {
+    await fetch("http://localhost:8000/logout", {
       method: "GET",
       credentials: "include",
     });
