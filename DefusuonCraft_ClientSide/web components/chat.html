@@ -1,5 +1,4 @@
 <!-- Gemini Chat Bubble + Window -->
-
 <div id="gemini-bubble" class="gemini-bubble hidden" onclick="toggleChat()">
   💬
 </div>
@@ -10,12 +9,14 @@
     <button onclick="toggleChat()">✖</button>
   </div>
   <div class="chat-body">
-    <div class="chat-log" id="chat-log"></div>
+    <div class="chat-log" id="chat-messages"></div>
     <input
       type="text"
       id="chat-input"
       placeholder="Ask something..."
       onkeydown="handleKey(event)"
     />
+    <button id="voice-input-btn" onclick="startVoiceInput()">🎤</button>
+    <button id="voice-output-btn" onclick="speakMessage()">🔊</button>
   </div>
 </div>

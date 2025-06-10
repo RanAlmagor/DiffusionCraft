@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from langdetect import detect
 import google.generativeai as genai
 from typing import Optional
-
+import requests
 
 # Load environment variables
 load_dotenv("secrets.env")
@@ -17,7 +17,7 @@ if not GEMINI_API_KEY:
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-2.5-flash-preview-05-20")  
 
-# Start a persistent chat session
+# Start a persistent chat session with Gemini
 chat = model.start_chat(history=[])
 
 # FastAPI router
@@ -43,8 +43,9 @@ async def gemini_image_chat(request: PromptRequest):
     # Detect user language
     try:
         lang = detect(user_input)
-    except:
+    except Exception as e:
         lang = "en"
+        print(f"Language detection failed: {str(e)}")
 
     is_hebrew = lang == "he"
 
@@ -85,4 +86,56 @@ async def gemini_image_chat(request: PromptRequest):
             "⚠️ קרתה שגיאה זמנית. נסה שוב בעוד רגע." if is_hebrew
             else "⚠️ A temporary error occurred. Please try again shortly."
         )
+        print(f"Error in Gemini chat: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"{fallback} (Details: {str(e)})")
+
+@router.post("/sendPromptToQueue", response_model=PromptResponse)
+async def send_prompt_to_queue(request: PromptRequest):
+    user_input = request.prompt.strip()
+
+    # Detect user language
+    try:
+        lang = detect(user_input)
+    except Exception as e:
+        lang = "en"
+        print(f"Language detection failed: {str(e)}")
+
+    is_hebrew = lang == "he"
+
+    try:
+        # Send request to external API (AWS Lambda API)
+        response = requests.post(
+            "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/prompets",
+            json={"prompt": user_input}
+        )
+        
+        # Check if the response was successful
+        if not response.ok:
+            raise HTTPException(status_code=500, detail=f"Failed to fetch response from external API. Status code: {response.status_code}")
+
+        data = response.json()  # תשובה מה-API החיצוני
+
+        return PromptResponse(
+            reply=data.get('reply', 'No reply from API'),
+            intent="image",
+            suggested_prompt=data.get('suggested_prompt', ''),
+            confirm_required=True
+        )
+
+    except requests.exceptions.RequestException as e:
+        # Handling network or connection issues
+        fallback = (
+            "⚠️ קרתה שגיאה זמנית. נסה שוב בעוד רגע." if is_hebrew
+            else "⚠️ A network error occurred while connecting to the API. Please try again shortly."
+        )
+        print(f"Network error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"{fallback} (Details: {str(e)})")
+
+    except Exception as e:
+        # Handling other unexpected errors
+        fallback = (
+            "⚠️ קרתה שגיאה זמנית. נסה שוב בעוד רגע." if is_hebrew
+            else "⚠️ A temporary error occurred. Please try again shortly."
+        )
+        print(f"Unexpected error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"{fallback} (Details: {str(e)})")

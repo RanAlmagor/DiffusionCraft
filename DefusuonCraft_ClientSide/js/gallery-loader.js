@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const gallery = document.getElementById("gallery");
 
-  fetch("https://vwx6lrkyh4.execute-api.us-east-1.amazonaws.com/prod/Images")
-    .then((res) => res.json())
+  // Send request to API Gateway
+  fetch("https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images")
+    .then((res) => res.json()) // Convert the response to JSON (no need to parse body anymore)
     .then((data) => {
-      const items = JSON.parse(data.body);
-      const completedImages = items.filter(
+      // Directly work with the data as it's already in JSON format
+      const completedImages = data.filter(
         (item) => item.status === "completed"
       );
 
@@ -15,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       completedImages.forEach((item, index) => {
-        fetch("web components/image-card.html")
+        fetch("web components/image-card.html") // Load the image card HTML template
           .then((res) => res.text())
           .then((html) => {
             const temp = document.createElement("div");
@@ -28,7 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const shareBtn = card.querySelector(".btn-share");
             const downloadBtn = card.querySelector(".btn-download");
 
-            img.src = item.s3url || "#";
+            // Set the image and details
+            img.src = item.s3url || "#"; // Set the image URL
             img.alt = item.prompt || `AI Image ${index + 1}`;
             userEl.textContent = item.userSub || "Unknown";
             createdEl.textContent = new Date(item.createdAt).toLocaleString();
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
               if (!imageKey) return;
 
               const apiUrl =
-                "https://vwx6lrkyh4.execute-api.us-east-1.amazonaws.com/prod/Images/ImageUrl?imageKey=" +
+                "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/ImageUrl?imageKey=" +
                 encodeURIComponent(imageKey);
 
               fetch(apiUrl)
@@ -49,10 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw new Error("No download URL returned");
                   }
 
+                  // Creating a link to trigger the download
                   const link = document.createElement("a");
                   link.href = data.downloadUrl;
                   link.download =
-                    (item.prompt?.replace(/\s+/g, "_") || "ai-image") + ".png";
+                    item.prompt?.replace(/\s+/g, "_") || "ai-image"; // Set file name
+
+                  // Append the link, trigger the download and remove the link
                   document.body.appendChild(link);
                   link.click();
                   document.body.removeChild(link);
@@ -78,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
               }
             });
 
+            // Append the image card to the gallery
             gallery.appendChild(card);
           });
       });

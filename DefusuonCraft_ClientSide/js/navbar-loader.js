@@ -1,16 +1,25 @@
-// File: js/navbar-loader.js
-import { fetchUserStatus, logoutUser } from "./auth-api.js";
+import { fetchUserStatus } from "./auth-api.js"; // ייבוא הפונקציה מהקובץ auth-api.js
 
 document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("navbar-container");
 
-  // טען את ה־HTML של ה־navbar
-  const res = await fetch("web components/navbar.html");
-  const html = await res.text();
-  container.innerHTML = html;
+  try {
+    // טוען את ה־HTML של ה־navbar
+    const res = await fetch("web components/navbar.html");
+    if (!res.ok) {
+      throw new Error("Failed to load navbar HTML");
+    }
+    const html = await res.text();
+    container.innerHTML = html;
+  } catch (error) {
+    console.error("Error loading navbar:", error);
+    container.innerHTML =
+      "<p>Error loading navbar. Please try again later.</p>";
+    return;
+  }
 
-  // רק אחרי שה־HTML נטען, אפשר לגשת לאלמנטים שבו
-  const user = await fetchUserStatus();
+  const user = await fetchUserStatus(); // קריאה אסינכרונית ל־fetchUserStatus
+  console.log("User Status:", user); // הדפסת הסטטוס של המשתמש
 
   const loginLink = document.getElementById("login-link");
   const logoutLink = document.getElementById("logout-link");
@@ -32,16 +41,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       adminLink?.classList.add("hidden");
     }
-
-    // טען את צ'אט ג'מיני רק למשתמשים מחוברים
-    const chatScript = document.createElement("script");
-    chatScript.src = "js/chat-loader.js";
-    chatScript.defer = true;
-    document.body.appendChild(chatScript);
   }
-
-  logoutLink?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    await logoutUser();
-  });
 });

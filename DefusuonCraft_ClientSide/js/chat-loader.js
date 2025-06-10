@@ -1,4 +1,4 @@
-// chat-loader.js
+import { fetchUserStatus } from "./auth-api.js"; // ייבוא הפונקציה מהקובץ auth-api.js
 
 // === Create the chat bubble button ===
 const chatButton = document.createElement("button");
@@ -7,16 +7,17 @@ chatButton.innerText = "💬";
 chatButton.style.position = "fixed";
 chatButton.style.bottom = "20px";
 chatButton.style.right = "20px";
-chatButton.style.width = "60px";
-chatButton.style.height = "60px";
+chatButton.style.width = "50px";
+chatButton.style.height = "50px";
 chatButton.style.borderRadius = "50%";
-chatButton.style.backgroundColor = "#0ff";
+chatButton.style.backgroundColor = "#00fff7";
 chatButton.style.color = "#000";
-chatButton.style.fontSize = "28px";
-chatButton.style.boxShadow = "0 0 20px #0ff";
+chatButton.style.fontSize = "26px";
+chatButton.style.boxShadow = "0 0 25px #00fff7, 0 0 50px #00fff7";
 chatButton.style.border = "none";
 chatButton.style.cursor = "pointer";
 chatButton.style.zIndex = "1000";
+chatButton.style.display = "none"; // התחל עם מוסתר
 document.body.appendChild(chatButton);
 
 // === Create the chat window (hidden by default) ===
@@ -31,46 +32,39 @@ chatWindow.style.background = "rgba(30, 30, 30, 0.95)";
 chatWindow.style.borderRadius = "12px";
 chatWindow.style.boxShadow = "0 0 25px rgba(0,255,255,0.5)";
 chatWindow.style.padding = "10px";
-chatWindow.style.display = "none";
+chatWindow.style.display = "none"; // התחל עם מוסתר
 chatWindow.style.flexDirection = "column";
 chatWindow.style.zIndex = "1000";
 
 chatWindow.innerHTML = `
   <div style="flex: 1; overflow-y: auto; color: white;" id="chat-messages"></div>
-  <input id="chat-input" type="text" placeholder="Ask Gemini..." 
+  <input id="chat-input" type="text" placeholder="Ask something..." 
     style="margin-top: 8px; padding: 8px; width: 100%; border-radius: 6px; border: none;" />
+  <button id="voice-input-btn" onclick="startVoiceInput()">🎤</button> <!-- כפתור הקלטה -->
+  <button id="voice-output-btn" onclick="speakMessage()">🔊</button> <!-- כפתור קריאת תשובות בקול -->
 `;
 
 document.body.appendChild(chatWindow);
+
+// === Fetch user status and show chat if logged in ===
+fetchUserStatus().then((user) => {
+  if (user.type !== "guest") {
+    chatButton.style.display = "block"; // הצגת כפתור צ'אט
+    chatWindow.style.display = "flex"; // הצגת חלון הצ'אט
+
+    // טעינת סקריפט הצ'אט דינמית אם המשתמש מחובר
+    const chatScript = document.createElement("script");
+    chatScript.src = "js/chat-handler.js"; // שמור את הקוד של הצ'אט בסקריפט נפרד
+    chatScript.defer = true;
+    document.body.appendChild(chatScript);
+  } else {
+    chatButton.style.display = "none"; // הסתרת כפתור הצ'אט
+    chatWindow.style.display = "none"; // הסתרת חלון הצ'אט
+  }
+});
 
 // === Toggle chat window ===
 chatButton.addEventListener("click", () => {
   chatWindow.style.display =
     chatWindow.style.display === "none" ? "flex" : "none";
 });
-
-// === Fake Gemini reply (simulate AI) ===
-document
-  .getElementById("chat-input")
-  .addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      const input = this.value.trim();
-      if (input === "") return;
-
-      const messagesDiv = document.getElementById("chat-messages");
-      const userMsg = document.createElement("div");
-      userMsg.textContent = "👤 " + input;
-      userMsg.style.marginBottom = "8px";
-      messagesDiv.appendChild(userMsg);
-
-      this.value = "";
-
-      const botMsg = document.createElement("div");
-      botMsg.textContent =
-        "🤖 DefusuinCraftAi: This feature is under development...";
-      botMsg.style.color = "#0ff";
-      messagesDiv.appendChild(botMsg);
-
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-  });
