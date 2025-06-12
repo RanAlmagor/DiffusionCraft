@@ -1,45 +1,54 @@
-import { fetchUserStatus } from "./auth-api.js"; // ייבוא הפונקציה מהקובץ auth-api.js
+// === navbar-loader.js ===
+// Loads the sidebar navbar dynamically and shows links based on Cognito group
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const container = document.getElementById("navbar-container");
-
-  try {
-    // טוען את ה־HTML של ה־navbar
-    const res = await fetch("web components/navbar.html");
-    if (!res.ok) {
-      throw new Error("Failed to load navbar HTML");
-    }
-    const html = await res.text();
+// Load navbar.html into #navbar-container
+fetch("web components/navbar.html")
+  .then((res) => res.text())
+  .then((html) => {
+    const container = document.getElementById("navbar-container");
     container.innerHTML = html;
-  } catch (error) {
-    console.error("Error loading navbar:", error);
-    container.innerHTML =
-      "<p>Error loading navbar. Please try again later.</p>";
-    return;
-  }
 
-  const user = await fetchUserStatus(); // קריאה אסינכרונית ל־fetchUserStatus
-  console.log("User Status:", user); // הדפסת הסטטוס של המשתמש
+    // Wait until DOM is updated
+    setTimeout(() => {
+      setupNavbarVisibility();
+      setupLogoutHandler();
+    }, 0);
+  })
+  .catch((err) => console.error("Failed to load navbar:", err));
 
+// Handle visibility of links based on user type
+function setupNavbarVisibility() {
   const loginLink = document.getElementById("login-link");
   const logoutLink = document.getElementById("logout-link");
   const adminLink = document.getElementById("admin-link");
   const galleryLink = document.getElementById("personal-gallery-link");
 
-  if (user.type === "guest") {
-    loginLink?.classList.remove("hidden");
-    logoutLink?.classList.add("hidden");
-    galleryLink?.classList.add("hidden");
-    adminLink?.classList.add("hidden");
-  } else {
-    loginLink?.classList.add("hidden");
-    logoutLink?.classList.remove("hidden");
-    galleryLink?.classList.remove("hidden");
+  // Default state – guest
+  loginLink.classList.remove("hidden");
+  logoutLink.classList.add("hidden");
+  adminLink.classList.add("hidden");
+  galleryLink.classList.add("hidden");
 
-    if (user.type === "admin") {
-      adminLink?.classList.remove("hidden");
-    } else {
-      adminLink?.classList.add("hidden");
+  if (window.CognitoUser) {
+    // User is logged in
+    loginLink.classList.add("hidden");
+    logoutLink.classList.remove("hidden");
+    galleryLink.classList.remove("hidden");
+
+    if (window.CognitoUser.isAdmin) {
+      adminLink.classList.remove("hidden");
     }
   }
-});
+}
+
+// Handle logout click – removes token + reloads
+function setupLogoutHandler() {
+  const logoutBtn = document.getElementById("logout-link");
+  if (!logoutBtn) return;
+
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.cookie = "access_token=; path=/; max-age=0";
+    window.location.reload();
+  });
+}
