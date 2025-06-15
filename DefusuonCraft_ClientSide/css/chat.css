@@ -339,3 +339,10 @@
     transform: rotate(360deg);
   }
 }
+
+.bot-message input[type="text"]:focus {
+  outline: none;
+  border-color: #00fff7;
+  box-shadow: 0 0 12px #00fff7, inset 0 0 8px #00fff7;
+  background-color: #000;
+}

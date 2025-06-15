@@ -116,6 +116,8 @@ function initChat() {
 
       const data = { message, userSub, originalPrompt, selectedStyle };
 
+      // ... previous code up to fetch()
+
       fetch(
         "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/AIChat",
         {
@@ -135,7 +137,7 @@ function initChat() {
           botReply.style.gap = "10px";
 
           const replyText = document.createElement("span");
-          replyText.textContent = "🤖 " + (data.reply || "No response");
+          replyText.textContent = "🧐 " + (data.reply || "No response");
           replyText.style.flex = "1";
           replyText.style.color = "#00fff7";
 
@@ -175,22 +177,42 @@ function initChat() {
             window.chat_originalPrompt = data.originalPrompt;
             window.chat_selectedStyle = "";
 
+            document.getElementById("chat-input").style.display = "none";
+            document.getElementById("voice-buttons-container").style.display =
+              "none";
+
             const styleOptions = [
-              { label: "🎨 Realistic", value: "Realistic" },
-              { label: "🌌 Fantasy", value: "Fantasy" },
-              { label: "🖌️ Watercolor", value: "Watercolor" },
-              { label: "🧩 Surrealism", value: "Surreal" },
-              { label: "🪄 Digital", value: "Digital Art" },
+              { label: " Realistic 🎨", value: "Realistic" },
+              { label: " Fantasy 🌌", value: "Fantasy" },
+              { label: " Watercolor 🖌️", value: "Watercolor" },
+              { label: " Surrealism 🧩", value: "Surreal" },
+              { label: " Digital Art 🪄", value: "Digital Art" },
+              { label: " Pixel Art 🕹️", value: "Pixel Art" },
+              { label: " Photorealistic 📸", value: "Photorealistic" },
+              { label: " Sci-Fi 🧬", value: "Sci-Fi" },
+              { label: " Anime 🌸", value: "Anime" },
+              { label: " Cartoon 👶", value: "Cartoon" },
+              { label: " Cyberpunk 🎭", value: "Cyberpunk" },
+              { label: " Magical 🧙‍♀️", value: "Magical" },
             ];
 
-            const buttonsDiv = document.createElement("div");
-            buttonsDiv.style.marginTop = "10px";
-            buttonsDiv.textContent = data.reply + " (choose style):";
+            const stylePromptDiv = document.createElement("div");
+            stylePromptDiv.className = "bot-message";
+            stylePromptDiv.style.flexDirection = "column";
+            stylePromptDiv.innerHTML = `
+        🤖 <strong>${data.reply || "Choose a style:"}</strong><br>
+        <em>Click one below or type your own style:</em>
+      `;
+
+            const buttonsWrap = document.createElement("div");
+            buttonsWrap.style.display = "flex";
+            buttonsWrap.style.flexWrap = "wrap";
+            buttonsWrap.style.marginTop = "8px";
+            buttonsWrap.style.gap = "6px";
 
             styleOptions.forEach((style) => {
               const btn = document.createElement("button");
               btn.textContent = style.label;
-              btn.style.margin = "6px";
               btn.style.padding = "6px 12px";
               btn.style.borderRadius = "8px";
               btn.style.border = "1px solid #00fff7";
@@ -200,12 +222,45 @@ function initChat() {
               btn.onclick = () => {
                 document.getElementById("chat-input").value = style.value;
                 window.chat_selectedStyle = style.value;
+                document.getElementById("chat-input").style.display = "";
+                document.getElementById(
+                  "voice-buttons-container"
+                ).style.display = "";
                 window.handleKey({ key: "Enter" });
               };
-              buttonsDiv.appendChild(btn);
+              buttonsWrap.appendChild(btn);
             });
 
-            log.appendChild(buttonsDiv);
+            const freeInput = document.createElement("input");
+            freeInput.type = "text";
+            freeInput.placeholder = "Or type a custom style...";
+            freeInput.style.marginTop = "10px";
+            freeInput.style.padding = "6px 8px";
+            freeInput.style.borderRadius = "8px";
+            freeInput.style.border = "1px solid #00fff7";
+            freeInput.style.background = "#111";
+            freeInput.style.color = "#00fff7";
+            freeInput.style.fontFamily = "Orbitron, sans-serif";
+            freeInput.style.boxShadow = "0 0 6px #00fff733 inset";
+
+            freeInput.onkeydown = (e) => {
+              if (e.key === "Enter") {
+                const customStyle = freeInput.value.trim();
+                if (customStyle) {
+                  document.getElementById("chat-input").value = customStyle;
+                  window.chat_selectedStyle = customStyle;
+                  document.getElementById("chat-input").style.display = "";
+                  document.getElementById(
+                    "voice-buttons-container"
+                  ).style.display = "";
+                  window.handleKey({ key: "Enter" });
+                }
+              }
+            };
+
+            stylePromptDiv.appendChild(buttonsWrap);
+            stylePromptDiv.appendChild(freeInput);
+            log.appendChild(stylePromptDiv);
             log.scrollTop = log.scrollHeight;
           }
         })
