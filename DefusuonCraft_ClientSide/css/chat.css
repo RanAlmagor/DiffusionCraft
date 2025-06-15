@@ -1,21 +1,21 @@
-/* --- Global Styles for Chat --- */
+/* === Global Chat Styles === */
 
-/* Chat Bubble (button) */
+/* Chat Bubble Button */
 .gemini-bubble {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #00fff7;
-  color: #000;
   width: 50px;
   height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: #00fff7;
+  color: #000;
+  font-size: 1.5rem;
   border-radius: 50%;
   box-shadow: 0 0 25px #00fff7, 0 0 50px #00fff7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 1.5rem;
   z-index: 1000;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -25,7 +25,7 @@
   box-shadow: 0 0 40px #00fff7, 0 0 80px #00fff7;
 }
 
-/* Chat Box (window) */
+/* Chat Box Window */
 .chat-box {
   position: fixed;
   bottom: 90px;
@@ -39,26 +39,26 @@
   display: flex;
   flex-direction: column;
   font-family: "Orbitron", sans-serif;
-  transition: transform 0.3s ease-in-out;
 }
 
 .chat-box.hidden {
   display: none;
 }
 
+/* Header */
 .chat-header {
   background-color: #00fff7;
   color: #000;
-  font-weight: bold;
   padding: 0.8rem 1rem;
+  font-weight: bold;
+  font-size: 1.1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
-  border-bottom: 1px solid #00fff7;
-  box-shadow: 0 0 10px #00fff7;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
+  border-bottom: 1px solid #00fff7;
+  box-shadow: 0 0 10px #00fff7;
 }
 
 .chat-header button {
@@ -77,37 +77,37 @@
   color: #000;
 }
 
-/* Chat messages */
+/* Body */
 .chat-body {
+  flex: 1;
+  background-color: #111;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  background-color: #111;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
 
+/* Messages Log */
 .chat-log {
-  height: 250px;
+  flex: 1;
   overflow-y: auto;
   font-size: 0.9rem;
-  margin-bottom: 1rem;
   color: #00fff7;
+  margin-bottom: 1rem;
   padding-right: 8px;
   font-family: "Orbitron", sans-serif;
-  transition: color 0.3s ease;
 }
 
+/* Input */
 #chat-input {
   padding: 0.6rem;
   background-color: #222;
   border: 1px solid #00fff7;
-  color: #00fff7;
   border-radius: 8px;
-  outline: none;
+  color: #00fff7;
   font-family: "Orbitron", sans-serif;
   box-shadow: 0 0 10px #00fff7 inset;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 #chat-input::placeholder {
@@ -115,17 +115,18 @@
   font-style: italic;
 }
 
-/* --- Voice Input and Output Buttons --- */
+/* Voice Buttons */
 #voice-buttons-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   margin-top: 10px;
 }
 
 #voice-input-btn,
-#voice-output-btn {
+#voice-output-btn,
+#test-voice-btn {
   width: 40px;
   height: 40px;
   background-color: #00fff7;
@@ -133,21 +134,68 @@
   color: #000;
   font-size: 1.2rem;
   border-radius: 50%;
-  cursor: pointer;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #voice-input-btn:hover,
-#voice-output-btn:hover {
+#voice-output-btn:hover,
+#test-voice-btn:hover {
   transform: scale(1.1);
   box-shadow: 0 0 25px rgba(0, 255, 255, 1);
 }
 
-#voice-input-btn:focus,
-#voice-output-btn:focus {
+/* Voice Selector */
+#voice-selector {
+  flex-grow: 1;
+  max-width: 160px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #00fff7;
+  background-color: #111;
+  color: #00fff7;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.85rem;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) inset;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#voice-selector:focus {
   outline: none;
+  border-color: #00fff7;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+#voice-selector option {
+  background-color: #111;
+  color: #00fff7;
+  font-family: "Orbitron", sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Speak Button Inside Bot Message */
+.speak-button {
+  width: 30px;
+  height: 30px;
+  background-color: #00fff7;
+  border: none;
+  border-radius: 50%;
+  color: #000;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.speak-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
 }
