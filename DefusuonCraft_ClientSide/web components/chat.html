@@ -10,13 +10,30 @@
   </div>
   <div class="chat-body">
     <div class="chat-log" id="chat-messages"></div>
+
     <input
       type="text"
       id="chat-input"
       placeholder="Ask something..."
       onkeydown="handleKey(event)"
     />
-    <button id="voice-input-btn" onclick="startVoiceInput()">🎤</button>
-    <button id="voice-output-btn" onclick="speakMessage()">🔊</button>
+
+    <!-- עטיפת הכפתורים לשורה אחת -->
+    <div id="voice-buttons-container">
+      <button
+        id="voice-input-btn"
+        onclick="startVoiceInput()"
+        title="Voice Input"
+      >
+        🎤
+      </button>
+      <button
+        id="voice-output-btn"
+        onclick="speakMessage()"
+        title="Voice Output"
+      >
+        🔊
+      </button>
+    </div>
   </div>
 </div>

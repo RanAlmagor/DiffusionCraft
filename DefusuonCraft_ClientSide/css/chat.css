@@ -7,15 +7,15 @@
   right: 20px;
   background-color: #00fff7;
   color: #000;
-  width: 50px; /* קטן יותר */
-  height: 50px; /* קטן יותר */
+  width: 50px;
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   box-shadow: 0 0 25px #00fff7, 0 0 50px #00fff7;
   cursor: pointer;
-  font-size: 1.5rem; /* גודל טקסט קטן */
+  font-size: 1.5rem;
   z-index: 1000;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -116,37 +116,38 @@
 }
 
 /* --- Voice Input and Output Buttons --- */
+#voice-buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
 #voice-input-btn,
 #voice-output-btn {
+  width: 40px;
+  height: 40px;
   background-color: #00fff7;
   border: none;
-  padding: 10px;
   color: #000;
   font-size: 1.2rem;
-  border-radius: 50%; /* עגול */
+  border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 10px;
-  margin-right: 10px;
-  display: inline-block; /* כפתורים ליד אחד את השני */
 }
 
 #voice-input-btn:hover,
 #voice-output-btn:hover {
-  transform: scale(1.1); /* הגדלה קלה */
-  box-shadow: 0 0 30px rgba(0, 255, 255, 1); /* אפקט זוהר חזק יותר */
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 1);
 }
 
 #voice-input-btn:focus,
 #voice-output-btn:focus {
   outline: none;
-}
-
-/* Align buttons horizontally with some spacing */
-#voice-buttons-container {
-  display: flex;
-  justify-content: center;
-  gap: 15px; /* רווח קטן בין הכפתורים */
-  margin-top: 10px;
 }
