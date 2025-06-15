@@ -1,54 +1,63 @@
-// === navbar-loader.js ===
-// Loads the sidebar navbar dynamically and shows links based on Cognito group
+// ========================
+// navbar-loader.js
+// ========================
 
-// Load navbar.html into #navbar-container
-fetch("web components/navbar.html")
-  .then((res) => res.text())
-  .then((html) => {
+window.addEventListener("load", async () => {
+  try {
+    const res = await fetch("web components/navbar.html");
+    const html = await res.text();
     const container = document.getElementById("navbar-container");
     container.innerHTML = html;
 
-    // Wait until DOM is updated
+    // הוספת השהייה קטנה כדי להבטיח שהטוקנים כבר הוזנו
     setTimeout(() => {
       setupNavbarVisibility();
       setupLogoutHandler();
-    }, 0);
-  })
-  .catch((err) => console.error("Failed to load navbar:", err));
+    }, 50); // אפשר גם 100 אם צריך
+  } catch (err) {
+    console.error("❌ Failed to load navbar:", err);
+  }
+});
 
-// Handle visibility of links based on user type
 function setupNavbarVisibility() {
   const loginLink = document.getElementById("login-link");
   const logoutLink = document.getElementById("logout-link");
   const adminLink = document.getElementById("admin-link");
   const galleryLink = document.getElementById("personal-gallery-link");
+  const userNameSpan = document.getElementById("user-name");
 
-  // Default state – guest
-  loginLink.classList.remove("hidden");
-  logoutLink.classList.add("hidden");
-  adminLink.classList.add("hidden");
-  galleryLink.classList.add("hidden");
+  // ברירת מחדל: הצג כאילו לא מחובר
+  loginLink?.classList.remove("hidden");
+  logoutLink?.classList.add("hidden");
+  adminLink?.classList.add("hidden");
+  galleryLink?.classList.add("hidden");
+  userNameSpan?.classList.add("hidden");
 
-  if (window.CognitoUser) {
-    // User is logged in
-    loginLink.classList.add("hidden");
-    logoutLink.classList.remove("hidden");
-    galleryLink.classList.remove("hidden");
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
 
-    if (window.CognitoUser.isAdmin) {
-      adminLink.classList.remove("hidden");
+  if (isLoggedIn && userInfo) {
+    loginLink?.classList.add("hidden");
+    logoutLink?.classList.remove("hidden");
+    galleryLink?.classList.remove("hidden");
+
+    if (userInfo.groups?.includes("Admins")) {
+      adminLink?.classList.remove("hidden");
+    }
+
+    if (userNameSpan && userInfo.name) {
+      userNameSpan.textContent = `👤 ${userInfo.name}`;
+      userNameSpan.classList.remove("hidden");
     }
   }
 }
 
-// Handle logout click – removes token + reloads
 function setupLogoutHandler() {
   const logoutBtn = document.getElementById("logout-link");
   if (!logoutBtn) return;
 
   logoutBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    document.cookie = "access_token=; path=/; max-age=0";
-    window.location.reload();
+    logoutUser(); // מוגדר ב-login-handler.js
   });
 }
