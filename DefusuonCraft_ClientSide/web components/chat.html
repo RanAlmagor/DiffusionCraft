@@ -1,12 +1,10 @@
 <!-- === Gemini Chat Bubble and Window === -->
 
 <!-- Floating Chat Bubble -->
-<div id="gemini-bubble" class="gemini-bubble hidden" onclick="toggleChat()">
-  💬
-</div>
+<div id="gemini-bubble" class="gemini-bubble" onclick="toggleChat()">💬</div>
 
 <!-- Chat Window -->
-<div id="chat-box" class="chat-box hidden">
+<div id="chat-box" class="chat-box">
   <!-- Chat Header -->
   <div class="chat-header">
     DefusionCraft Assistant
@@ -27,12 +25,12 @@
     />
 
     <!-- Voice Controls -->
-
     <div id="voice-buttons-container">
       <!-- Voice Selector Dropdown -->
       <select id="voice-selector" title="Choose Voice">
         <option>Loading voices...</option>
       </select>
+
       <!-- Test Voice Button -->
       <button
         id="test-voice-btn"

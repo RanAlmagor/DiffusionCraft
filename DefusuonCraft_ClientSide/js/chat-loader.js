@@ -24,23 +24,68 @@ function initChat() {
       console.error("❌ Missing chat UI elements");
       return;
     }
-    bubble.classList.toggle("hidden");
-    box.classList.toggle("hidden");
+
+    if (box.classList.contains("active")) {
+      box.classList.remove("active");
+      setTimeout(() => {
+        bubble.classList.remove("hidden");
+        console.log("💬 Chat bubble shown");
+      }, 300);
+    } else {
+      bubble.classList.add("hidden");
+      box.classList.add("active");
+    }
   };
 
-  // === Friendly initial message from the Wizard ===
   const log = document.getElementById("chat-messages");
+
   if (log) {
-    const welcome = document.createElement("div");
-    welcome.className = "bot-message";
-    welcome.innerHTML = `
-      🤖 <strong>Welcome, dreamer!</strong><br>
-      I am <em>The Wizard of DefusionCraft</em> 🧙‍♂️<br>
-      Share your magical idea – and I’ll conjure it into a stunning image ✨
-    `;
-    welcome.style.color = "#00fff7";
-    welcome.style.marginBottom = "15px";
-    log.appendChild(welcome);
+    const botReply = document.createElement("div");
+    botReply.className = "bot-message";
+
+    // יצירת בלוק טקסט ברור ומופרד עם פסקאות
+    const welcomeText = document.createElement("div");
+    welcomeText.innerHTML = `
+    <p><strong>Welcome, dreamer!</strong> 🤖</p>
+    <p>I am <em>The Wizard of DefusionCraft</em> 🧙‍♂️</p>
+    <p>Share your magical idea,<br>and I’ll conjure it into a <strong>stunning image ✨</strong></p>
+  `;
+    welcomeText.style.color = "#00fff7";
+    welcomeText.style.lineHeight = "1.5";
+    welcomeText.style.flex = "1";
+
+    // כפתור דיבור
+    const speakBtn = document.createElement("button");
+    speakBtn.innerHTML = "🔊";
+    speakBtn.title = "Speak this";
+    speakBtn.className = "speak-button";
+    speakBtn.onclick = () => {
+      const synth = window.speechSynthesis;
+      const utterance = new SpeechSynthesisUtterance(
+        "Welcome, dreamer! I am the Wizard of DefusionCraft. Share your magical idea and I’ll conjure it into a stunning image."
+      );
+      const selectedVoiceName =
+        document.getElementById("voice-selector")?.value;
+      const selectedVoice = synth
+        .getVoices()
+        .find((v) => v.name === selectedVoiceName);
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+        utterance.lang = selectedVoice.lang;
+      }
+      synth.cancel();
+      synth.speak(utterance);
+    };
+
+    // מבנה גמיש
+    botReply.style.display = "flex";
+    botReply.style.alignItems = "center";
+    botReply.style.justifyContent = "space-between";
+    botReply.style.gap = "10px";
+
+    botReply.appendChild(welcomeText);
+    botReply.appendChild(speakBtn);
+    log.appendChild(botReply);
   }
 
   window.handleKey = function (event) {
@@ -51,14 +96,17 @@ function initChat() {
       if (!message) return;
 
       const userMsg = document.createElement("div");
-      userMsg.textContent = "🧠 " + message;
+      userMsg.className = "user-message";
+      userMsg.textContent = message;
+      log.appendChild(userMsg);
+
       log.appendChild(userMsg);
       input.value = "";
       log.scrollTop = log.scrollHeight;
 
       const loadingMsg = document.createElement("div");
-      loadingMsg.textContent = "🤖 Thinking...";
       loadingMsg.id = "loading-msg";
+      loadingMsg.className = "loading-spinner";
       log.appendChild(loadingMsg);
       log.scrollTop = log.scrollHeight;
 
@@ -66,12 +114,7 @@ function initChat() {
       const originalPrompt = window.chat_originalPrompt || "";
       const selectedStyle = window.chat_selectedStyle || "";
 
-      const data = {
-        message,
-        userSub,
-        originalPrompt,
-        selectedStyle,
-      };
+      const data = { message, userSub, originalPrompt, selectedStyle };
 
       fetch(
         "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/AIChat",
@@ -105,20 +148,15 @@ function initChat() {
             const utterance = new SpeechSynthesisUtterance(
               data.reply || "No response"
             );
-
             const selectedVoiceName =
               document.getElementById("voice-selector")?.value;
             const selectedVoice = synth
               .getVoices()
               .find((v) => v.name === selectedVoiceName);
-
             if (selectedVoice) {
               utterance.voice = selectedVoice;
               utterance.lang = selectedVoice.lang;
-            } else {
-              console.warn("⚠️ Selected voice not found. Using default.");
             }
-
             synth.cancel();
             synth.speak(utterance);
           };
@@ -175,7 +213,7 @@ function initChat() {
           document.getElementById("loading-msg")?.remove();
           const errorMsg = document.createElement("div");
           errorMsg.textContent = "⚠️ Error contacting server";
-          document.getElementById("chat-messages").appendChild(errorMsg);
+          log.appendChild(errorMsg);
           console.error("❌ Chat API error:", err);
         });
     }
@@ -257,7 +295,7 @@ function initChat() {
       return;
     }
 
-    selector.innerHTML = ""; // Clear previous options
+    selector.innerHTML = "";
 
     voices.forEach((voice) => {
       const option = document.createElement("option");

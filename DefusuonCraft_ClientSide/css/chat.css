@@ -1,6 +1,6 @@
 /* === Global Chat Styles === */
 
-/* Chat Bubble Button */
+/* 💬 Chat Bubble Button */
 .gemini-bubble {
   position: fixed;
   bottom: 20px;
@@ -25,13 +25,13 @@
   box-shadow: 0 0 40px #00fff7, 0 0 80px #00fff7;
 }
 
-/* Chat Box Window */
+/* 📦 Chat Box Window */
 .chat-box {
   position: fixed;
   bottom: 90px;
   right: 20px;
   width: 350px;
-  height: 450px;
+  height: 500px;
   background-color: #222;
   border: 1px solid #00fff7;
   border-radius: 16px;
@@ -39,13 +39,21 @@
   display: flex;
   flex-direction: column;
   font-family: "Orbitron", sans-serif;
+  overflow: hidden;
+  transform-origin: bottom right;
+  transform: scaleY(0);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.chat-box.hidden {
-  display: none;
+.chat-box.active {
+  transform: scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Header */
+/* 🧠 Chat Header */
 .chat-header {
   background-color: #00fff7;
   color: #000;
@@ -71,13 +79,12 @@
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
 .chat-header button:hover {
   background-color: #00fff7;
   color: #000;
 }
 
-/* Body */
+/* 💬 Chat Body */
 .chat-body {
   flex: 1;
   background-color: #111;
@@ -86,20 +93,116 @@
   flex-direction: column;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
+  overflow: hidden;
 }
 
-/* Messages Log */
+/* 🧾 Messages Log */
 .chat-log {
   flex: 1;
   overflow-y: auto;
   font-size: 0.9rem;
-  color: #00fff7;
   margin-bottom: 1rem;
   padding-right: 8px;
-  font-family: "Orbitron", sans-serif;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Input */
+/* 🧾 Messages Log */
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  padding-right: 8px;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.chat-log {
+  position: relative;
+}
+
+/* ✨ Scrollbar Styling */
+.chat-log::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-log::-webkit-scrollbar-track {
+  background: #111;
+  border-radius: 8px;
+}
+.chat-log::-webkit-scrollbar-thumb {
+  background: #00fff7;
+  border-radius: 8px;
+}
+.chat-log::-webkit-scrollbar-thumb:hover {
+  background: #00e0d1;
+}
+
+/* 🏷️ Labels Above Messages */
+.msg-label {
+  font-size: 0.7rem;
+  color: #00fff7aa;
+  font-style: italic;
+  margin-bottom: 2px;
+  padding: 0 6px;
+}
+
+/* 🧍 User Message – align right */
+.user-message {
+  background-color: #003344;
+  color: #00fff7;
+  padding: 10px 14px;
+  border-radius: 14px 14px 0 14px;
+  margin: 6px 0 6px auto;
+  max-width: 80%;
+  font-weight: bold;
+  box-shadow: 0 0 10px #00fff733;
+  text-align: left;
+  position: relative;
+}
+.user-message::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 8px solid #003344;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+/* 🤖 Bot Message – align left */
+.bot-message {
+  background-color: #111;
+  color: #00fff7;
+  padding: 10px 14px;
+  border-radius: 14px 14px 14px 0;
+  margin: 6px auto 6px 0;
+  max-width: 80%;
+  box-shadow: 0 0 10px #00fff722;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  position: relative;
+}
+.bot-message::after {
+  content: "";
+  position: absolute;
+  left: -8px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-right: 8px solid #111;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+/* ✍️ Input Box */
 #chat-input {
   padding: 0.6rem;
   background-color: #222;
@@ -115,7 +218,7 @@
   font-style: italic;
 }
 
-/* Voice Buttons */
+/* 🎤 Voice Buttons */
 #voice-buttons-container {
   display: flex;
   justify-content: center;
@@ -141,7 +244,6 @@
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 #voice-input-btn:hover,
 #voice-output-btn:hover,
 #test-voice-btn:hover {
@@ -149,7 +251,7 @@
   box-shadow: 0 0 25px rgba(0, 255, 255, 1);
 }
 
-/* Voice Selector */
+/* 🎙 Voice Selector */
 #voice-selector {
   flex-grow: 1;
   max-width: 160px;
@@ -164,6 +266,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
 }
 
 #voice-selector:focus {
@@ -181,7 +286,27 @@
   text-overflow: ellipsis;
 }
 
-/* Speak Button Inside Bot Message */
+/* 💠 Scrollbar Styling (only applies in certain cases) */
+#voice-selector[size]::-webkit-scrollbar {
+  width: 8px;
+}
+
+#voice-selector[size]::-webkit-scrollbar-track {
+  background: #111;
+  border-radius: 10px;
+}
+
+#voice-selector[size]::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00fff7, #007bff);
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px #00fff7;
+}
+
+#voice-selector[size]::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00e0d1, #0055cc);
+}
+
+/* 🔊 Speak Button */
 .speak-button {
   width: 30px;
   height: 30px;
@@ -194,8 +319,23 @@
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .speak-button:hover {
   transform: scale(1.1);
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+/* 🌀 Loading Spinner */
+.loading-spinner {
+  border: 4px solid rgba(0, 255, 255, 0.2);
+  border-top: 4px solid #00fff7;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
