@@ -1,3 +1,35 @@
+// chat-loader.js
+window.addEventListener("load", () => {
+  const chatContainer = document.getElementById("chat-container");
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+  if (!isLoggedIn) {
+    console.log("🛑 User not logged in. Hiding chat.");
+    if (chatContainer) chatContainer.classList.add("hidden");
+    return;
+  }
+
+  console.log("✅ User is logged in. Showing chat.");
+  if (chatContainer) chatContainer.classList.remove("hidden");
+
+  // Load chat content
+  fetch("web components/chat.html")
+    .then((response) => {
+      if (!response.ok)
+        throw new Error("Failed to load chat.html: " + response.status);
+      return response.text();
+    })
+    .then((html) => {
+      console.log("✅ chat.html loaded successfully");
+      chatContainer.innerHTML = html;
+      initChat();
+    })
+    .catch((err) => {
+      console.error("❌ Error loading chat.html:", err);
+    });
+});
+
+
 // Load chat.html into #chat-container
 fetch("web components/chat.html")
   .then((response) => {
