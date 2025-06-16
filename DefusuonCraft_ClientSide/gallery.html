@@ -1,65 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DefusionCraft Gallery</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DefusionCraft Gallery</title>
 
-    <!-- Tailwind CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-      rel="stylesheet"
-    />
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 
-    <!-- Orbitron Font -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Orbitron Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/gallery.css" />
-  </head>
-  <body>
-    <div class="container mx-auto p-8">
-      <!-- Header -->
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl text-cyan-300 font-bold">🧠 DefusionCraft</h1>
-        <a
-          href="https://your-cognito-domain/login"
-          class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2 px-4 rounded-xl shadow-lg"
-        >
-          Login
-        </a>
-      </div>
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/gallery.css" />
+  <link rel="stylesheet" href="css/chat.css" />
+</head>
 
-      <!-- Title -->
-      <h2 class="section-title">Your Personal Gallery</h2>
-
-      <!-- Gallery -->
-      <div class="gallery">
-        <img
-          src="https://via.placeholder.com/300x200.png?text=Image+1"
-          alt="Image 1"
-        />
-        <img
-          src="https://via.placeholder.com/300x200.png?text=Image+2"
-          alt="Image 2"
-        />
-        <img
-          src="https://via.placeholder.com/300x200.png?text=Image+3"
-          alt="Image 3"
-        />
-        <img
-          src="https://via.placeholder.com/300x200.png?text=Image+4"
-          alt="Image 4"
-        />
-      </div>
+<body>
+  <div class="container mx-auto p-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl text-cyan-300 font-bold">🧠 DefusionCraft</h1>
+      <a
+        href="https://your-cognito-domain/login"
+        class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-2 px-4 rounded-xl shadow-lg"
+      >
+        Login
+      </a>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-      &copy; 2025 DefusionCraft. All rights reserved.
-    </footer>
-  </body>
+    <!-- Title -->
+    <h2 class="section-title">Your Personal Gallery</h2>
+
+    <!-- Gallery -->
+    <div class="gallery" id="gallery"></div>
+
+    <!-- Chat Container -->
+    <div id="chat-container" class="chat-wrapper"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 DefusionCraft. All rights reserved.
+  </footer>
+
+  <script src="js/gallery-loader.js"></script>
+  <script type="module" src="js/chat-loader.js"></script>
+</body>
 </html>

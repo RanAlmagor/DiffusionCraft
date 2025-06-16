@@ -1,53 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap");
-
-body {
-  font-family: "Orbitron", sans-serif;
-  background-color: #020202;
-  background-image: radial-gradient(
-    rgba(0, 255, 247, 0.015) 1px,
-    transparent 1px
-  );
-  background-size: 40px 40px;
-  color: #d0d0d0;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.section-title {
-  font-size: 2.8rem;
-  color: #0ff;
-  text-align: center;
-  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
-}
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  padding-bottom: 3rem;
-}
-
-.gallery img {
+.chat-wrapper {
+  margin: 3rem auto 5rem;
+  max-width: 350px;
+  width: 90%;
+  background-color: #111;
+  border: 1px solid #00fff7;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 16px;
+  box-shadow: 0 0 20px rgba(0, 255, 247, 0.1);
+  position: relative;
+  z-index: 1;
 }
 
-.gallery img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-}
-
-.footer {
-  background-color: #050505;
+#gemini-bubble {
+  display: block;
+  margin: 0 auto 10px;
   text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #444;
-  border-top: 1px solid #0a0a0a;
-  box-shadow: inset 0 2px 6px rgba(0, 255, 255, 0.03);
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .chat-wrapper {
+    padding: 12px;
+  }
 }
