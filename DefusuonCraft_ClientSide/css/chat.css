@@ -23,3 +23,9 @@
     padding: 12px;
   }
 }
+
+.chat-wrapper, #chat-container {
+  margin-left: 300px;      /* כדי לא לפגוש את ה-navbar */
+  margin-right: 16px;      /* כדי לא להתקרב לקצה המסך */
+  width: calc(100% - 216px); /* 200px + 16px */
+}
