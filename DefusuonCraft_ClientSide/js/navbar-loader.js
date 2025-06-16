@@ -13,7 +13,7 @@ window.addEventListener("load", async () => {
     setTimeout(() => {
       setupNavbarVisibility();
       setupLogoutHandler();
-    }, 50); // אפשר גם 100 אם צריך
+    }, 50);
   } catch (err) {
     console.error("❌ Failed to load navbar:", err);
   }
@@ -26,7 +26,6 @@ function setupNavbarVisibility() {
   const galleryLink = document.getElementById("personal-gallery-link");
   const userNameSpan = document.getElementById("user-name");
 
-  // ברירת מחדל: הצג כאילו לא מחובר
   loginLink?.classList.remove("hidden");
   logoutLink?.classList.add("hidden");
   adminLink?.classList.add("hidden");

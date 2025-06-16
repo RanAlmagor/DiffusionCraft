@@ -1,22 +1,53 @@
-<!-- Gemini Chat Bubble + Window -->
-<div id="gemini-bubble" class="gemini-bubble hidden" onclick="toggleChat()">
-  💬
-</div>
+<!-- === Gemini Chat Bubble and Window === -->
 
-<div id="chat-box" class="chat-box hidden">
+<!-- Floating Chat Bubble -->
+<div id="gemini-bubble" class="gemini-bubble" onclick="toggleChat()">💬</div>
+
+<!-- Chat Window -->
+<div id="chat-box" class="chat-box">
+  <!-- Chat Header -->
   <div class="chat-header">
     DefusionCraft Assistant
-    <button onclick="toggleChat()">✖</button>
+    <button onclick="toggleChat()" title="Close Chat">✖</button>
   </div>
+
+  <!-- Chat Body -->
   <div class="chat-body">
-    <div class="chat-log" id="chat-messages"></div>
+    <!-- Chat Messages -->
+    <div id="chat-messages" class="chat-log"></div>
+
+    <!-- Input Field -->
     <input
-      type="text"
       id="chat-input"
-      placeholder="Ask something..."
+      type="text"
+      placeholder="Ask something magical..."
       onkeydown="handleKey(event)"
     />
-    <button id="voice-input-btn" onclick="startVoiceInput()">🎤</button>
-    <button id="voice-output-btn" onclick="speakMessage()">🔊</button>
+
+    <!-- Voice Controls -->
+    <div id="voice-buttons-container">
+      <!-- Voice Selector Dropdown -->
+      <select id="voice-selector" title="Choose Voice">
+        <option>Loading voices...</option>
+      </select>
+
+      <!-- Test Voice Button -->
+      <button
+        id="test-voice-btn"
+        onclick="testSelectedVoice()"
+        title="Test Voice"
+      >
+        🧪
+      </button>
+
+      <!-- Voice Input -->
+      <button
+        id="voice-input-btn"
+        onclick="startVoiceInput()"
+        title="Speak to Chat"
+      >
+        🎤
+      </button>
+    </div>
   </div>
 </div>
