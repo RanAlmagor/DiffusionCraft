@@ -127,3 +127,94 @@ body {
   border-top: 1px solid #0a0a0a;
   box-shadow: inset 0 2px 6px rgba(0, 255, 255, 0.03);
 }
+/* ---------- SUCCESS TOAST (moved to top-right) ---------- */
+#success-toast {
+  position: fixed;
+  top: 2rem !important; /* ממקם למעלה */
+  right: 2rem !important; /* עדיין מצד ימין */
+  bottom: auto !important; /* מבטלים את ה-bottom */
+  /* השאר כמו שהיה */
+  background: rgba(30, 30, 30, 0.85);
+  color: var(--color-primary);
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--color-primary);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: "Orbitron", sans-serif;
+  box-shadow: 0 0 8px var(--color-primary), 0 0 16px var(--color-primary),
+    0 0 24px var(--color-primary);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#success-toast.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@keyframes popFade {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+#toast-message {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 30, 0.95);
+  color: #00fff7;
+  padding: 1rem 1.5rem;
+  border: 2px solid #00fff7;
+  border-radius: 12px;
+  font-family: "Orbitron", sans-serif;
+  font-weight: bold;
+  box-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7, 0 0 30px #00fff7;
+  opacity: 0;
+  z-index: 9999;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#toast-message.show {
+  opacity: 1;
+  pointer-events: auto;
+  animation: popFade 2.5s ease forwards;
+}
+
+@keyframes popFade {
+  0% {
+    transform: translateX(-50%) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    transform: translateX(-50%) scale(1.1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0;
+  }
+}

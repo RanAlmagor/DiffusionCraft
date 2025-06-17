@@ -1,38 +1,31 @@
 async function deleteImage(imageId) {
-  // שלוף את המידע על המשתמש (שם, קבוצת Admins וכו')
+  // שלוף את המידע על המשתמש
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const userSub = userInfo.name;
   const isAdmin = userInfo.groups?.includes("Admins") || false;
 
-  // יצירת URL עם פרמטרים
-  const url = new URL(
-    "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal"
-  );
-  url.searchParams.append("imageId", imageId);
-  url.searchParams.append("userSub", userSub);
-  url.searchParams.append("isAdmin", isAdmin);
+  const url =
+    "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal";
 
   try {
-    // שלח בקשת DELETE
-    const response = await fetch(url.toString(), {
+    // שלח בקשת DELETE עם פרמטרים בגוף הבקשה
+    const response = await fetch(url, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json", // חשוב לציין את סוג התוכן
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({ imageId, userSub, isAdmin }),
     });
 
-    // קבל את התשובה מהשרת
     const data = await response.json();
 
     if (!response.ok) {
-      // אם יש שגיאה בשרת, שלח שגיאה
       throw new Error(data.error || "Failed to delete image");
     }
 
-    console.log("🗑️ Image deleted:", data); // הצגת הצלחה בלוג
-    return data; // החזר את התשובה
+    console.log("🗑️ Image deleted:", data);
+    return data;
   } catch (error) {
-    // אם יש שגיאה בקוד או בבקשה
     console.error("❌ Error deleting image:", error.message);
     throw error;
   }

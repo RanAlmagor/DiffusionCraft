@@ -158,21 +158,23 @@ async function renderImages() {
 }
 
 /****************  ACTIONS  ****************/
-function showSuccessToast(msg) {
-  let toast = document.getElementById("success-toast");
+function showToast(message, color = "#00fff7", emoji = "🎉") {
+  let toast = document.getElementById("toast-message");
   if (!toast) {
     toast = document.createElement("div");
-    toast.id = "success-toast";
+    toast.id = "toast-message";
     document.body.appendChild(toast);
   }
-  toast.textContent = "🎆 " + msg;
+
+  toast.innerText = `${emoji} ${message}`;
+  toast.style.color = color;
+  toast.style.borderColor = color;
+  toast.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`;
   toast.classList.add("show");
-  toast.style.animation = "popFade 2s ease-out forwards";
 
   setTimeout(() => {
     toast.classList.remove("show");
-    toast.style.animation = "";
-  }, 2000);
+  }, 2500);
 }
 
 function zoom(src) {
@@ -209,17 +211,37 @@ async function downloadImg(s3url, prompt) {
   }
 }
 
-async function deleteImg(imageId, userSub) {
-  if (!confirm("Delete this image?")) return;
-  await fetch(
-    "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/DeleteImage",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageId, userSub }),
+async function deleteImg(imageId, userSub, isAdmin = false) {
+  if (!confirm("❗ Are you sure you want to delete this image?")) return;
+
+  try {
+    const response = await fetch(
+      "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal",
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageId, userSub, isAdmin }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("❌ Delete failed:", error);
+      showToast("Failed to delete image.", "#ff4f4f", "❌");
+      return;
     }
-  );
-  renderImages();
+
+    const result = await response.json();
+    console.log("✅ Image deleted:", result.message);
+
+    showToast("Image deleted successfully!", "#00ff99", "🗑️");
+    renderImages(); // ריענון הגלריה
+  } catch (err) {
+    console.error("❌ Delete failed:", err);
+    showToast("Delete failed. Try again.", "#ff4f4f", "⚠️");
+  }
 }
 
 function startEditPrompt(imageId, userSub, oldPrompt) {
@@ -256,11 +278,11 @@ function submitPromptEdit(imageId, userSub) {
       // עדכון הטקסט בטבלה
       document.getElementById(`prompt-${imageId}`).innerText = newPrompt;
       // הצגת Toast במקום alert
-      showSuccessToast("Prompt updated successfully!");
+      showToast("Prompt updated successfully!", "#00ff99", "💾");
     })
     .catch((err) => {
       console.error("❌ Update failed:", err);
-      showSuccessToast("Failed to update image.");
+      showToast("Failed to update image.", "#ff4f4f", "⚠️");
     });
 }
 
