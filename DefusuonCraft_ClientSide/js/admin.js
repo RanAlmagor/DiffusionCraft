@@ -158,6 +158,23 @@ async function renderImages() {
 }
 
 /****************  ACTIONS  ****************/
+function showSuccessToast(msg) {
+  let toast = document.getElementById("success-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "success-toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = "🎆 " + msg;
+  toast.classList.add("show");
+  toast.style.animation = "popFade 2s ease-out forwards";
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    toast.style.animation = "";
+  }, 2000);
+}
+
 function zoom(src) {
   const modal = document.getElementById("zoom-modal");
   document.getElementById("zoom-img").src = src;
@@ -222,19 +239,12 @@ function submitPromptEdit(imageId, userSub) {
   const input = document.getElementById(`input-${imageId}`);
   const newPrompt = input.value;
 
-  const data = {
-    imageId,
-    userSub,
-    newPrompt,
-  };
-
+  const data = { imageId, userSub, newPrompt };
   console.log("📤 Sending update request:", data);
 
   fetch("https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images", {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
     .then((res) => {
@@ -243,12 +253,14 @@ function submitPromptEdit(imageId, userSub) {
     })
     .then((json) => {
       console.log("✅ Success:", json);
+      // עדכון הטקסט בטבלה
       document.getElementById(`prompt-${imageId}`).innerText = newPrompt;
-      alert("Prompt updated!");
+      // הצגת Toast במקום alert
+      showSuccessToast("Prompt updated successfully!");
     })
     .catch((err) => {
       console.error("❌ Update failed:", err);
-      alert("Failed to update image.");
+      showSuccessToast("Failed to update image.");
     });
 }
 
