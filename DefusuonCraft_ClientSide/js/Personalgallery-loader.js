@@ -2,15 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const gallery = document.getElementById("gallery");
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-  const userSub = userInfo.sub;
+  const userName = userInfo.name;
 
-  if (!userSub) {
+  if (!userName) {
     gallery.innerHTML = "<p>User not logged in.</p>";
     return;
   }
 
-  const apiUrl = `https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal?userSub=${encodeURIComponent(
-    userSub
+  const apiUrl = `https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal?userName=${encodeURIComponent(
+    userName
   )}`;
 
   fetch(apiUrl)
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             img.src = item.s3url || "#";
             img.alt = item.prompt || `AI Image ${index + 1}`;
-            userEl.textContent = "You";
+            userEl.textContent = userName;
             createdEl.textContent = new Date(item.createdAt).toLocaleString();
 
             // --- Download Logic ---

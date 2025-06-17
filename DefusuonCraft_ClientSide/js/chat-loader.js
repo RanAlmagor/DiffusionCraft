@@ -29,7 +29,6 @@ window.addEventListener("load", () => {
     });
 });
 
-
 // Load chat.html into #chat-container
 fetch("web components/chat.html")
   .then((response) => {
@@ -141,8 +140,8 @@ function initChat() {
       loadingMsg.className = "loading-spinner";
       log.appendChild(loadingMsg);
       log.scrollTop = log.scrollHeight;
-
-      const userSub = "test-user-123";
+      const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+      const userSub = userInfo?.name;
       const originalPrompt = window.chat_originalPrompt || "";
       const selectedStyle = window.chat_selectedStyle || "";
 
