@@ -1,0 +1,112 @@
+/* ----------  GENERAL  ---------- */
+body {
+  font-family: "Orbitron", sans-serif;
+  margin: 0;
+  background: #121212;
+  color: #fff;
+}
+.hidden {
+  display: none;
+}
+
+/* ----------  LAYOUT  ---------- */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+}
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #2d2d2d, #3d3d3d);
+  padding: 40px 20px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+.sidebar h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar li {
+  margin: 20px 0;
+}
+.sidebar a {
+  color: #a5a5a5;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+.sidebar a:hover {
+  color: #00b8d8;
+}
+
+.main-content {
+  margin-left: 260px;
+  padding: 40px;
+  width: 100%;
+}
+.admin-header {
+  border-bottom: 2px solid #333;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+}
+.admin-header h1 {
+  margin: 0;
+  font-size: 36px;
+}
+
+/* ----------  TABLES  ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 12px;
+}
+tbody tr:nth-child(even) {
+  background: #1f1f1f;
+}
+tbody tr:hover {
+  background: #2a2a2a;
+}
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+button:hover {
+  opacity: 0.8;
+}
+.footer {
+  background: #1f1f1f;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+  color: #a5a5a5;
+}
+
+/* ----------  RESPONSIVE  ---------- */
+@media (max-width: 1024px) {
+  .admin-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    position: static;
+    width: 100%;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
