@@ -98,7 +98,6 @@ function renderPager() {
     mkBtn(currentPage + 1, "Next →", currentPage === total)
   );
 }
-
 function renderPage(page) {
   currentPage = page;
   const start = (page - 1) * PAGE_SIZE;
@@ -108,7 +107,7 @@ function renderPage(page) {
   tbody.innerHTML = "";
 
   if (!slice.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="text-muted">No images found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="text-muted">No images found.</td></tr>`; // כאן נוסיף 8 עמודות במקום 7
   }
 
   slice.forEach((item) => {
@@ -118,6 +117,7 @@ function renderPage(page) {
     const url = unwrap(item, "s3url");
     const created = unwrap(item, "createdAt");
     const status = unwrap(item, "status");
+    const updatedAt = unwrap(item, "updatedAt"); // תאריך עדכון
     const dateStr = new Date(created).toLocaleString("en-GB", {
       day: "2-digit",
       month: "short",
@@ -126,22 +126,33 @@ function renderPage(page) {
       minute: "2-digit",
     });
 
+    const updatedDateStr = updatedAt
+      ? new Date(updatedAt).toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "Not updated yet"; // אם אין תאריך עדכון, נציג "לא עודכן"
+
     const tr = document.createElement("tr");
     tr.setAttribute("data-id", id);
     tr.setAttribute("data-user", userSub);
 
     tr.innerHTML = `
-  <td><img src="${url}" alt="" /></td>
-  <td class="truncate editable-prompt" data-full="${prompt}" id="prompt-${id}">${prompt}</td>
-  <td>${userSub}</td>
-  <td>${dateStr}</td>
-  <td>${badge(status)}</td>
-  <td class="actions">
-    <button class="btn edit-btn" onclick="startEditPrompt('${id}', '${userSub}', \`${prompt}\`)"></button>
-    <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
-    <button class="btn download-btn" onclick="downloadImg('${url}', \`${prompt}\`)"></button>
-    <button class="btn delete-btn" onclick="deleteImg('${id}', '${userSub}')"></button>
-  </td>`;
+      <td><img src="${url}" alt="" /></td>
+      <td class="truncate editable-prompt" data-full="${prompt}" id="prompt-${id}">${prompt}</td>
+      <td>${userSub}</td>
+      <td>${dateStr}</td>
+      <td>${updatedDateStr}</td> <!-- תאריך עדכון -->
+      <td>${badge(status)}</td>
+      <td class="actions">
+        <button class="btn edit-btn" onclick="startEditPrompt('${id}', '${userSub}', \`${prompt}\`)"></button>
+        <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
+        <button class="btn download-btn" onclick="downloadImg('${url}', \`${prompt}\`)"></button>
+        <button class="btn delete-btn" onclick="deleteImg('${id}', '${userSub}')"></button>
+      </td>`;
     tbody.appendChild(tr);
   });
 
@@ -247,13 +258,11 @@ async function deleteImg(imageId, userSub, isAdmin = false) {
 function startEditPrompt(imageId, userSub, oldPrompt) {
   const td = document.getElementById(`prompt-${imageId}`);
 
-  // מחליף לתיבת טקסט
   td.innerHTML = `
     <input type="text" id="input-${imageId}" value="${oldPrompt}" class="prompt-input" />
     <button class="btn" onclick="submitPromptEdit('${imageId}', '${userSub}')">💾</button>
   `;
 
-  // מיקוד אוטומטי
   setTimeout(() => document.getElementById(`input-${imageId}`).focus(), 0);
 }
 
@@ -275,9 +284,7 @@ function submitPromptEdit(imageId, userSub) {
     })
     .then((json) => {
       console.log("✅ Success:", json);
-      // עדכון הטקסט בטבלה
       document.getElementById(`prompt-${imageId}`).innerText = newPrompt;
-      // הצגת Toast במקום alert
       showToast("Prompt updated successfully!", "#00ff99", "💾");
     })
     .catch((err) => {
