@@ -1,11 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
   const gallery = document.getElementById("gallery");
 
-  // Send request to API Gateway
+  // Zoom modal elements
+  const zoomModal = document.getElementById("zoom-modal");
+  const zoomImage = document.getElementById("zoom-image");
+  const zoomDescription = document.getElementById("zoom-description");
+  const closeModalBtn = document.getElementById("close-modal");
+
+  // Close the zoom modal on button click
+  closeModalBtn.addEventListener("click", () => {
+    zoomModal.classList.add("hidden");
+  });
+
+  // Fetch images from API Gateway
   fetch("https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images")
-    .then((res) => res.json()) // Convert the response to JSON (no need to parse body anymore)
+    .then((res) => res.json())
     .then((data) => {
-      // Directly work with the data as it's already in JSON format
       const completedImages = data.filter(
         (item) => item.status === "completed"
       );
@@ -15,8 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Loop through each completed image
       completedImages.forEach((item, index) => {
-        fetch("web components/image-card.html") // Load the image card HTML template
+        fetch("web components/image-card.html")
           .then((res) => res.text())
           .then((html) => {
             const temp = document.createElement("div");
@@ -29,13 +40,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const shareBtn = card.querySelector(".btn-share");
             const downloadBtn = card.querySelector(".btn-download");
 
-            // Set the image and details
-            img.src = item.s3url || "#"; // Set the image URL
+            // Set image details
+            img.src = item.s3url || "#";
             img.alt = item.prompt || `AI Image ${index + 1}`;
             userEl.textContent = item.userSub || "Unknown";
             createdEl.textContent = new Date(item.createdAt).toLocaleString();
 
-            // ✅ Download button logic
+            // Zoom modal logic
+            img.style.cursor = "zoom-in";
+            img.addEventListener("click", () => {
+              zoomImage.src = item.s3url;
+              zoomDescription.textContent = item.prompt || "No description";
+              zoomModal.classList.remove("hidden");
+            });
+
+            // Download logic
             downloadBtn.addEventListener("click", () => {
               const imageKey = item.s3url?.split(".com/")[1];
               if (!imageKey) return;
@@ -47,17 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
               fetch(apiUrl)
                 .then((res) => res.json())
                 .then((data) => {
-                  if (!data.downloadUrl) {
+                  if (!data.downloadUrl)
                     throw new Error("No download URL returned");
-                  }
 
-                  // Creating a link to trigger the download
                   const link = document.createElement("a");
                   link.href = data.downloadUrl;
                   link.download =
-                    item.prompt?.replace(/\s+/g, "_") || "ai-image"; // Set file name
-
-                  // Append the link, trigger the download and remove the link
+                    item.prompt?.replace(/\s+/g, "_") || "ai-image";
                   document.body.appendChild(link);
                   link.click();
                   document.body.removeChild(link);
@@ -68,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
 
-            // ✅ Share button logic
+            // Share logic
             shareBtn.addEventListener("click", () => {
               if (navigator.share) {
                 navigator
@@ -83,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
               }
             });
 
-            // Append the image card to the gallery
             gallery.appendChild(card);
           });
       });

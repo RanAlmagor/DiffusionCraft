@@ -41,6 +41,82 @@ body {
   margin-top: 3rem;
   margin-bottom: 2rem;
 }
+/* === Zoom Modal === */
+#zoom-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 2rem;
+}
+
+#zoom-modal.hidden {
+  display: none;
+}
+
+#zoom-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.4);
+  transition: transform 0.3s ease-in-out;
+  border: 2px solid #0ff;
+}
+
+#zoom-description {
+  margin-top: 1.8rem;
+  text-align: center;
+  color: #00fff7;
+  font-size: 1.15rem;
+  max-width: 90vw;
+  max-height: 22vh;
+  overflow-y: auto;
+  line-height: 1.6;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+
+  /* 🧊 Modern translucent glass effect */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  text-shadow: 0 0 5px #00fff7;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+  scrollbar-width: thin;
+  scrollbar-color: #0ff #111;
+}
+#zoom-description::-webkit-scrollbar {
+  width: 8px;
+}
+#zoom-description::-webkit-scrollbar-thumb {
+  background-color: #00fff7;
+  border-radius: 6px;
+}
+#zoom-description::-webkit-scrollbar-track {
+  background: #111;
+}
+
+#close-modal {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: #0ff;
+  color: #000;
+  border: none;
+  font-size: 1.2rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+  transition: background 0.2s ease;
+}
+
+#close-modal:hover {
+  background: #00cccc;
+}
 
 .footer {
   background-color: #050505;

@@ -199,6 +199,101 @@ function initChat() {
           log.appendChild(botReply);
           log.scrollTop = log.scrollHeight;
 
+          // If an imageId is returned, start polling
+          if (data.imageId) {
+            const userInfo = JSON.parse(
+              localStorage.getItem("userInfo") || "{}"
+            );
+            const userSub = userInfo?.name;
+
+            const loadingBlock = document.createElement("div");
+            loadingBlock.id = "image-loading";
+            loadingBlock.className = "bot-message";
+            loadingBlock.innerHTML = `<p>🧙‍♂️ Generating your magical image... Please wait.</p>`;
+            log.appendChild(loadingBlock);
+            log.scrollTop = log.scrollHeight;
+
+            const poll = setInterval(() => {
+              fetch(
+                "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/status_Image",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ imageId: data.imageId, userSub }),
+                }
+              )
+                .then((res) => res.json())
+                .then((rawData) => {
+                  const statusData =
+                    typeof rawData.body === "string"
+                      ? JSON.parse(rawData.body)
+                      : rawData;
+
+                  if (statusData.status === "completed" && statusData.s3url) {
+                    clearInterval(poll);
+                    loadingBlock.remove();
+
+                    // 🖼️ Create message block
+                    const imgBlock = document.createElement("div");
+                    imgBlock.className = "bot-message";
+                    imgBlock.style.display = "flex";
+                    imgBlock.style.flexDirection = "column";
+
+                    // 📝 Caption
+                    const caption = document.createElement("p");
+                    caption.innerHTML = `<strong>${
+                      statusData.prompt || "✨ Your image is ready:"
+                    }</strong>`;
+                    caption.style.marginBottom = "8px";
+                    caption.style.color = "#00fff7";
+
+                    // 🖼️ Image
+                    const img = document.createElement("img");
+                    img.src = statusData.s3url;
+                    img.style.maxWidth = "100%";
+                    img.style.borderRadius = "12px";
+                    img.style.marginTop = "4px";
+
+                    imgBlock.appendChild(caption);
+                    imgBlock.appendChild(img);
+                    log.appendChild(imgBlock);
+                    log.scrollTop = log.scrollHeight;
+
+                    // 🖼️ Add to gallery
+                    const gallery = document.getElementById("gallery");
+                    if (gallery) {
+                      const card = document.createElement("div");
+                      card.className = "image-card";
+                      card.innerHTML = `
+            <img src="${statusData.s3url}" alt="${statusData.prompt || ""}" />
+            <p class="caption">${statusData.prompt || ""}</p>
+          `;
+                      gallery.prepend(card);
+                    }
+
+                    // 🔄 Reset chat input
+                    const chatInput = document.getElementById("chat-input");
+                    const voiceControls = document.getElementById(
+                      "voice-buttons-container"
+                    );
+                    if (chatInput) {
+                      chatInput.value = "";
+                      chatInput.style.display = "";
+                    }
+                    if (voiceControls) {
+                      voiceControls.style.display = "";
+                    }
+
+                    window.chat_originalPrompt = "";
+                    window.chat_selectedStyle = "";
+                  }
+                })
+                .catch((err) => {
+                  console.error("Polling error:", err);
+                });
+            }, 3000);
+          }
+
           if (data.expectingConfirmation && data.originalPrompt) {
             window.chat_originalPrompt = data.originalPrompt;
             window.chat_selectedStyle = "";
@@ -231,9 +326,9 @@ function initChat() {
             stylePromptDiv.className = "bot-message";
             stylePromptDiv.style.flexDirection = "column";
             stylePromptDiv.innerHTML = `
-        🤖 <strong>${data.reply || "Choose a style:"}</strong><br>
-        <em>Click one below or type your own style:</em>
-      `;
+      🤖 <strong>${data.reply || "Choose a style:"}</strong><br>
+      <em>Click one below or type your own style:</em>
+    `;
 
             const buttonsWrap = document.createElement("div");
             buttonsWrap.style.display = "flex";
@@ -295,6 +390,7 @@ function initChat() {
             log.scrollTop = log.scrollHeight;
           }
         })
+
         .catch((err) => {
           document.getElementById("loading-msg")?.remove();
           const errorMsg = document.createElement("div");
