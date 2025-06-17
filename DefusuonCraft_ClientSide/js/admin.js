@@ -128,16 +128,17 @@ function renderPage(page) {
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td><img src="${url}" alt="" /></td>
-      <td class="truncate" title="${prompt}">${prompt}</td>
-      <td>${userSub}</td>
-      <td>${dateStr}</td>
-      <td>${badge(status)}</td>
-      <td class="actions">
-        <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
-        <button class="btn download-btn" onclick="downloadImg('${url}', \`${prompt}\`)"></button>
-        <button class="btn delete-btn" onclick="deleteImg('${id}','${userSub}')"></button>
-      </td>`;
+  <td><img src="${url}" alt="" /></td>
+  <td class="truncate" title="${prompt}">${prompt}</td>
+  <td>${userSub}</td>
+  <td>${dateStr}</td>
+  <td>${badge(status)}</td>
+  <td class="actions">
+    <button class="btn edit-btn"    onclick="editImage('${id}', \`${prompt}\`)"></button>
+    <button class="btn zoom-btn"    onclick="zoom('${url}')"></button>
+    <button class="btn download-btn" onclick="downloadImg('${url}', \`${prompt}\`)"></button>
+    <button class="btn delete-btn"  onclick="deleteImg('${id}','${userSub}')"></button>
+  </td>`;
     tbody.appendChild(tr);
   });
 
