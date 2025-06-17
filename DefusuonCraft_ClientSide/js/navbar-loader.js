@@ -45,7 +45,7 @@ function setupNavbarVisibility() {
     }
 
     if (userNameSpan && userInfo.name) {
-      userNameSpan.textContent = `👤 ${userInfo.name}`;
+      userNameSpan.textContent = `Welcome, ${userInfo.name} 👤`;
       userNameSpan.classList.remove("hidden");
     }
   }
@@ -57,6 +57,7 @@ function setupLogoutHandler() {
 
   logoutBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    logoutUser(); // מוגדר ב-login-handler.js
+    localStorage.clear();
+    window.location.href = "index.html"; // ניתוב לאחר ההתנתקות
   });
 }

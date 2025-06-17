@@ -1,22 +1,27 @@
 <header class="sidebar-navbar">
   <h1 class="logo">DefusionCraft</h1>
-  <span id="user-name" class="nav-link hidden"></span><br>
+  <span id="user-name" class="nav-link hidden"></span><br />
 
   <nav class="nav-links-vertical">
+    <!-- קישור קבוע לדף הבית -->
+    <a href="index.html" class="nav-link"> <span>Home</span> 🏠 </a>
+
+    <!-- קישורים דינמיים לפי סטטוס -->
     <a href="gallery.html" id="personal-gallery-link" class="nav-link hidden">
-      🎨 <span>My Gallery</span>
+      <span>My Gallery</span> 🎨
     </a>
     <a href="admin.html" id="admin-link" class="nav-link hidden">
-      🛠 <span>Admin</span>
+      <span>Admin</span> 🛠
     </a>
     <a href="#" id="logout-link" class="nav-link hidden">
-      🚪 <span>Logout</span>
+      <span>Logout</span> 🚪
     </a>
-    <a href="https://us-east-1dnwmhmzpn.auth.us-east-1.amazoncognito.com/login/continue?client_id=3nnhk77f33vism7j0ou8o0oeka&redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Findex.html&response_type=token&scope=email+openid+profile"
-      id="login-link" class="nav-link">
-      🔐 <span>Login</span>
+    <a
+      href="https://us-east-1dnwmhmzpn.auth.us-east-1.amazoncognito.com/login/continue?client_id=3nnhk77f33vism7j0ou8o0oeka&redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Findex.html&response_type=token&scope=email+openid+profile"
+      id="login-link"
+      class="nav-link"
+    >
+      <span>Login</span> 🔐
     </a>
-
-
   </nav>
 </header>

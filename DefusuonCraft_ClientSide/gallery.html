@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DefusionCraft Gallery</title>
+    <title>DefusionCraft | Your Gallery</title>
 
     <!-- Tailwind CSS -->
     <link
@@ -19,30 +19,36 @@
 
     <!-- Custom Styles -->
     <link rel="stylesheet" href="css/gallery.css" />
+    <link rel="stylesheet" href="css/image-card.css" />
     <link rel="stylesheet" href="css/chat.css" />
+    <link rel="stylesheet" href="css/navbar.css" />
   </head>
 
-  <body>
-    <div class="container mx-auto p-8">
-      <!-- Header -->
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl text-cyan-300 font-bold">🧠 DefusionCraft</h1>
-      </div>
+  <body class="bg-black text-gray-200 font-orbitron">
+    <!-- Navbar (Loaded dynamically) -->
+    <div id="navbar-container"></div>
 
+    <!-- Page Container -->
+    <div class="container mx-auto px-6 py-8">
       <!-- Title -->
-      <h2 class="section-title">Your Personal Gallery</h2>
+      <h2 class="section-title text-center">Your Personal Gallery</h2>
 
       <!-- Gallery -->
-      <div class="gallery" id="gallery"></div>
+      <section class="gallery" id="gallery"></section>
 
       <!-- Chat Container -->
-      <div id="chat-container" class="chat-wrapper"></div>
+      <div id="chat-container" class="chat-wrapper mt-12"></div>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer
+      class="footer text-center text-sm mt-16 border-t border-gray-800 pt-4"
+    >
       &copy; 2025 DefusionCraft. All rights reserved.
     </footer>
+
+    <!-- Scripts -->
+    <script src="js/login-handler.js"></script>
     <script type="module" src="js/navbar-loader.js"></script>
     <script src="js/Personalgallery-loader.js"></script>
   </body>
