@@ -60,7 +60,6 @@ function renderUsers() {
   });
 }
 
-// דמה: edit/delete משתמש
 function editUser(username) {
   alert("Edit user: " + username);
 }
@@ -135,9 +134,9 @@ function renderPage(page) {
       <td>${dateStr}</td>
       <td>${badge(status)}</td>
       <td class="actions">
-        <button class="btn zoom-btn"      onclick="zoom('${url}')"></button>
-        <button class="btn download-btn"  onclick="downloadImg('${id}','${userSub}')"></button>
-        <button class="btn delete-btn"    onclick="deleteImg('${id}','${userSub}')"></button>
+        <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
+        <button class="btn download-btn" onclick="downloadImg('${url}', \`${prompt}\`)"></button>
+        <button class="btn delete-btn" onclick="deleteImg('${id}','${userSub}')"></button>
       </td>`;
     tbody.appendChild(tr);
   });
@@ -162,21 +161,31 @@ function zoom(src) {
   modal.onclick = () => modal.classList.add("hidden");
 }
 
-async function downloadImg(imageId, userSub) {
-  const res = await fetch(
-    `${API_DOWNLOAD}?imageId=${imageId}&userSub=${userSub}`
-  );
-  if (!res.ok) {
-    alert("Download failed");
+async function downloadImg(s3url, prompt) {
+  const imageKey = s3url?.split(".com/")[1];
+  if (!imageKey) {
+    alert("Invalid image URL");
     return;
   }
-  const { url } = await res.json();
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${imageId}.png`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+
+  const apiUrl = `${API_DOWNLOAD}?imageKey=${encodeURIComponent(imageKey)}`;
+
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+
+    if (!data.downloadUrl) throw new Error("No download URL returned");
+
+    const link = document.createElement("a");
+    link.href = data.downloadUrl;
+    link.download = (prompt || "ai-image").replace(/\s+/g, "_") + ".png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    console.error("❌ Failed to download image:", err);
+    alert("Download failed.");
+  }
 }
 
 async function deleteImg(imageId, userSub) {

@@ -191,8 +191,10 @@ body {
 .actions .edit-btn::before {
   content: "✏️";
 }
+
+/* צהוב בוהק במקום secondary */
 .actions .edit-btn:hover {
-  background: var(--color-secondary);
+  background: #ffd700;
 }
 
 /* 🗑️ Delete */
