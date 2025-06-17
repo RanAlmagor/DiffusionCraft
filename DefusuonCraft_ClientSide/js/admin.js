@@ -1,18 +1,28 @@
-/* ----------  DATA  ---------- */
-const users = [
-  { username: "John Doe", group: "Admin" },
-  { username: "Jane Smith", group: "User" },
-  { username: "Alice Johnson", group: "User" },
-];
+/****************  CONFIG  ****************/
+const API_IMAGES =
+  "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images";
+const API_DOWNLOAD =
+  "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/ImageUrl";
+const PAGE_SIZE = 12;
 
-const images = [
-  { name: "image1.jpg", date: "2025-06-01" },
-  { name: "image2.jpg", date: "2025-06-02" },
-  { name: "image3.jpg", date: "2025-06-03" },
-];
+let imagesCache = [];
+let currentPage = 1;
 
-/* ----------  SECTION TOGGLE  ---------- */
-window.showSection = function (id) {
+/****************  HELPERS  ****************/
+const unwrap = (obj, key) => (obj[key] && obj[key].S ? obj[key].S : obj[key]);
+const badge = (status) => {
+  const colors = {
+    completed: "bg-green-600",
+    pending: "bg-yellow-500",
+    failed: "bg-red-600",
+  };
+  return `<span class="px-2 py-1 rounded text-xs text-white ${
+    colors[status] || "bg-gray-600"
+  }">${status}</span>`;
+};
+
+/****************  SECTION TOGGLE  ****************/
+window.showSection = (id) => {
   ["user-management", "image-management"].forEach((sec) => {
     const el = document.getElementById(sec);
     if (el) el.classList.add("hidden");
@@ -21,20 +31,28 @@ window.showSection = function (id) {
   if (chosen) chosen.classList.remove("hidden");
 };
 
-/* ----------  RENDERING  ---------- */
+/****************  RENDER USERS (DEMO)  ****************/
+const demoUsers = [
+  { username: "John Doe", group: "Admin" },
+  { username: "Jane Smith", group: "User" },
+  { username: "Alice Johnson", group: "User" },
+];
+
 function renderUsers() {
   const tbody = document.getElementById("user-list");
   tbody.innerHTML = "";
-  users.forEach((u) => {
+  demoUsers.forEach((u) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td class="text-gray-300">${u.username}</td>
-      <td class="text-gray-300">${u.group}</td>
-      <td>
-        <button class="bg-blue-500 text-white">Edit</button>
+      <td>${u.username}</td>
+      <td>${u.group}</td>
+      <td class="actions">
+        <button class="btn edit-btn" onclick="editUser('${
+          u.username
+        }')"></button>
         ${
           u.group === "User"
-            ? '<button class="bg-red-500 text-white ml-2">Delete</button>'
+            ? `<button class="btn delete-btn" onclick="deleteUser('${u.username}')"></button>`
             : ""
         }
       </td>`;
@@ -42,22 +60,141 @@ function renderUsers() {
   });
 }
 
-function renderImages() {
-  const tbody = document.getElementById("image-list");
-  tbody.innerHTML = "";
-  images.forEach((img) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="text-gray-300">${img.name}</td>
-      <td class="text-gray-300">${img.date}</td>
-      <td><button class="bg-red-500 text-white">Delete</button></td>`;
-    tbody.appendChild(tr);
-  });
+// דמה: edit/delete משתמש
+function editUser(username) {
+  alert("Edit user: " + username);
+}
+function deleteUser(username) {
+  if (!confirm(`Delete user ${username}?`)) return;
+  alert("Deleted " + username);
 }
 
-/* ----------  INIT  ---------- */
+/****************  FETCH & RENDER IMAGES  ****************/
+async function getImages() {
+  const res = await fetch(API_IMAGES);
+  if (!res.ok) throw new Error("Failed to fetch images");
+  imagesCache = await res.json();
+}
+
+function renderPager() {
+  const pager = document.getElementById("pager");
+  pager.innerHTML = "";
+  const total = Math.ceil(imagesCache.length / PAGE_SIZE);
+
+  const mkBtn = (p, label, disabled) =>
+    `<button ${
+      disabled ? "disabled" : ""
+    } onclick="renderPage(${p})">${label}</button>`;
+
+  pager.insertAdjacentHTML(
+    "beforeend",
+    mkBtn(currentPage - 1, "← Prev", currentPage === 1)
+  );
+  pager.insertAdjacentHTML(
+    "beforeend",
+    `<span class="text-muted">Page ${currentPage}/${total}</span>`
+  );
+  pager.insertAdjacentHTML(
+    "beforeend",
+    mkBtn(currentPage + 1, "Next →", currentPage === total)
+  );
+}
+
+function renderPage(page) {
+  currentPage = page;
+  const start = (page - 1) * PAGE_SIZE;
+  const slice = imagesCache.slice(start, start + PAGE_SIZE);
+
+  const tbody = document.getElementById("image-list");
+  tbody.innerHTML = "";
+
+  if (!slice.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-muted">No images found.</td></tr>`;
+  }
+
+  slice.forEach((item) => {
+    const id = unwrap(item, "imageId");
+    const userSub = unwrap(item, "userSub");
+    const prompt = unwrap(item, "prompt");
+    const url = unwrap(item, "s3url");
+    const created = unwrap(item, "createdAt");
+    const status = unwrap(item, "status");
+    const dateStr = new Date(created).toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><img src="${url}" alt="" /></td>
+      <td class="truncate" title="${prompt}">${prompt}</td>
+      <td>${userSub}</td>
+      <td>${dateStr}</td>
+      <td>${badge(status)}</td>
+      <td class="actions">
+        <button class="btn zoom-btn"      onclick="zoom('${url}')"></button>
+        <button class="btn download-btn"  onclick="downloadImg('${id}','${userSub}')"></button>
+        <button class="btn delete-btn"    onclick="deleteImg('${id}','${userSub}')"></button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  renderPager();
+}
+
+async function renderImages() {
+  try {
+    await getImages();
+    renderPage(1);
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+/****************  ACTIONS  ****************/
+function zoom(src) {
+  const modal = document.getElementById("zoom-modal");
+  document.getElementById("zoom-img").src = src;
+  modal.classList.remove("hidden");
+  modal.onclick = () => modal.classList.add("hidden");
+}
+
+async function downloadImg(imageId, userSub) {
+  const res = await fetch(
+    `${API_DOWNLOAD}?imageId=${imageId}&userSub=${userSub}`
+  );
+  if (!res.ok) {
+    alert("Download failed");
+    return;
+  }
+  const { url } = await res.json();
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${imageId}.png`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function deleteImg(imageId, userSub) {
+  if (!confirm("Delete this image?")) return;
+  await fetch(
+    "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/DeleteImage",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageId, userSub }),
+    }
+  );
+  renderImages();
+}
+
+/****************  INIT  ****************/
 document.addEventListener("DOMContentLoaded", () => {
   renderUsers();
   renderImages();
-  showSection("user-management"); // ברירת-מחדל
+  showSection("image-management");
 });

@@ -21,46 +21,48 @@
     />
   </head>
   <body>
-    <!-- Main Admin Container -->
-    <div class="admin-container">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <h2>Admin Panel</h2>
-        <ul>
-          <li><a href="index.html">Dashboard</a></li>
-          <li>
-            <a
-              href="javascript:void(0);"
-              onclick="showSection('user-management')"
-              >User Management</a
-            >
-          </li>
-          <li>
-            <a
-              href="javascript:void(0);"
-              onclick="showSection('image-management')"
-              >Image Management</a
-            >
-          </li>
-        </ul>
-      </aside>
+    <!-- NAVBAR אופקי -->
+    <header class="navbar">
+      <div class="navbar-title">DefusionCraft Management ⚡</div>
+      <nav class="navbar-nav">
+        <a
+          id="link-dashboard"
+          href="index.html"
+          class="nav-link dashboard"
+          title="Dashboard"
+        ></a>
+        <a
+          id="link-users"
+          href="javascript:void(0);"
+          class="nav-link users"
+          title="Users"
+        ></a>
+        <a
+          id="link-images"
+          href="javascript:void(0);"
+          class="nav-link images"
+          title="Images"
+        ></a>
+      </nav>
+    </header>
 
-      <!-- Main Content -->
+    <div class="main-wrapper">
+      <!-- MAIN CONTENT -->
       <main class="main-content">
         <header class="admin-header">
           <h1>Welcome, Admin</h1>
         </header>
 
         <!-- USER MANAGEMENT -->
-        <section id="user-management" class="hidden">
+        <section id="user-management" class="hidden section">
           <h2>User Management</h2>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-gray-800 rounded-lg shadow-lg">
+          <div class="table-wrapper">
+            <table class="styled-table">
               <thead>
                 <tr>
-                  <th class="px-4 py-2 text-left text-white">Username</th>
-                  <th class="px-4 py-2 text-left text-white">Group</th>
-                  <th class="px-4 py-2 text-left text-white">Actions</th>
+                  <th>Username</th>
+                  <th>Group</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="user-list"></tbody>
@@ -69,22 +71,31 @@
         </section>
 
         <!-- IMAGE MANAGEMENT -->
-        <section id="image-management" class="hidden">
+        <section id="image-management" class="hidden section">
           <h2>Manage Images</h2>
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-gray-800 rounded-lg shadow-lg">
+          <div class="table-wrapper">
+            <table class="styled-table">
               <thead>
                 <tr>
-                  <th class="px-4 py-2 text-left text-white">Image Name</th>
-                  <th class="px-4 py-2 text-left text-white">Date Uploaded</th>
-                  <th class="px-4 py-2 text-left text-white">Actions</th>
+                  <th>Thumbnail</th>
+                  <th>Prompt</th>
+                  <th>User</th>
+                  <th>Created</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="image-list"></tbody>
             </table>
           </div>
+          <div id="pager" class="pager"></div>
         </section>
       </main>
+    </div>
+
+    <!-- ZOOM MODAL -->
+    <div id="zoom-modal" class="zoom-modal hidden">
+      <img id="zoom-img" alt="Zoomed Image" />
     </div>
 
     <footer class="footer">
