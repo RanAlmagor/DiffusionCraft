@@ -127,17 +127,20 @@ function renderPage(page) {
     });
 
     const tr = document.createElement("tr");
+    tr.setAttribute("data-id", id);
+    tr.setAttribute("data-user", userSub);
+
     tr.innerHTML = `
   <td><img src="${url}" alt="" /></td>
-  <td class="truncate" title="${prompt}">${prompt}</td>
+  <td class="truncate editable-prompt" data-full="${prompt}" id="prompt-${id}">${prompt}</td>
   <td>${userSub}</td>
   <td>${dateStr}</td>
   <td>${badge(status)}</td>
   <td class="actions">
-    <button class="btn edit-btn"    onclick="editImage('${id}', \`${prompt}\`)"></button>
-    <button class="btn zoom-btn"    onclick="zoom('${url}')"></button>
+    <button class="btn edit-btn" onclick="startEditPrompt('${id}', '${userSub}', \`${prompt}\`)"></button>
+    <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
     <button class="btn download-btn" onclick="downloadImg('${url}', \`${prompt}\`)"></button>
-    <button class="btn delete-btn"  onclick="deleteImg('${id}','${userSub}')"></button>
+    <button class="btn delete-btn" onclick="deleteImg('${id}', '${userSub}')"></button>
   </td>`;
     tbody.appendChild(tr);
   });
@@ -200,6 +203,53 @@ async function deleteImg(imageId, userSub) {
     }
   );
   renderImages();
+}
+
+function startEditPrompt(imageId, userSub, oldPrompt) {
+  const td = document.getElementById(`prompt-${imageId}`);
+
+  // מחליף לתיבת טקסט
+  td.innerHTML = `
+    <input type="text" id="input-${imageId}" value="${oldPrompt}" class="prompt-input" />
+    <button class="btn" onclick="submitPromptEdit('${imageId}', '${userSub}')">💾</button>
+  `;
+
+  // מיקוד אוטומטי
+  setTimeout(() => document.getElementById(`input-${imageId}`).focus(), 0);
+}
+
+function submitPromptEdit(imageId, userSub) {
+  const input = document.getElementById(`input-${imageId}`);
+  const newPrompt = input.value;
+
+  const data = {
+    imageId,
+    userSub,
+    newPrompt,
+  };
+
+  console.log("📤 Sending update request:", data);
+
+  fetch("https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error(`❌ ${res.status}`);
+      return res.json();
+    })
+    .then((json) => {
+      console.log("✅ Success:", json);
+      document.getElementById(`prompt-${imageId}`).innerText = newPrompt;
+      alert("Prompt updated!");
+    })
+    .catch((err) => {
+      console.error("❌ Update failed:", err);
+      alert("Failed to update image.");
+    });
 }
 
 /****************  INIT  ****************/

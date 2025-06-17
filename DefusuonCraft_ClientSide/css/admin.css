@@ -295,3 +295,39 @@ body {
     padding: var(--spacing);
   }
 }
+/* ---------- TRUNCATED PROMPT WITH TOOLTIP ---------- */
+.truncate {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative;
+  cursor: help;
+}
+
+/* Tooltip on hover */
+.truncate:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  background: #222;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  white-space: normal;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+/* ---------- PROMPT INPUT STYLING ---------- */
+.prompt-input {
+  width: 80%;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-light);
+  color: var(--text-light);
+}
