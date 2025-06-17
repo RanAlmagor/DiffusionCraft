@@ -1,5 +1,23 @@
+function showToast(message, color = "#00fff7", emoji = "🎉") {
+  let toast = document.getElementById("toast-message");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast-message";
+    document.body.appendChild(toast);
+  }
+
+  toast.innerText = `${emoji} ${message}`;
+  toast.style.color = color;
+  toast.style.borderColor = color;
+  toast.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2500);
+}
+
 async function deleteImage(imageId) {
-  // שלוף את המידע על המשתמש
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const userSub = userInfo.name;
   const isAdmin = userInfo.groups?.includes("Admins") || false;
@@ -24,9 +42,11 @@ async function deleteImage(imageId) {
     }
 
     console.log("🗑️ Image deleted:", data);
+    showToast("🗑️ Image deleted successfully!", "#00ff99", "✅"); // Success Toast
     return data;
   } catch (error) {
     console.error("❌ Error deleting image:", error.message);
+    showToast("❌ Failed to delete image.", "#ff4f4f", "⚠️"); // Error Toast
     throw error;
   }
 }
