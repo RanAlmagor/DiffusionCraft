@@ -21,7 +21,7 @@
     />
   </head>
   <body>
-    <!-- NAVBAR אופקי -->
+    <!-- NAVBAR -->
     <header class="navbar">
       <div class="navbar-title">DefusionCraft Management ⚡</div>
       <nav class="navbar-nav">
@@ -30,12 +30,6 @@
           href="index.html"
           class="nav-link dashboard"
           title="Dashboard"
-        ></a>
-        <a
-          id="link-users"
-          href="javascript:void(0);"
-          class="nav-link users"
-          title="Users"
         ></a>
         <a
           id="link-images"
@@ -47,147 +41,114 @@
     </header>
 
     <div class="main-wrapper">
-      <!-- MAIN CONTENT -->
       <main class="main-content">
         <header class="admin-header">
-          <h1>Welcome, Admin</h1>
+          <h1>Manage Images</h1>
         </header>
 
-        <!-- USER MANAGEMENT -->
-        <section id="user-management" class="hidden section">
-          <h2>User Management</h2>
-          <div class="table-wrapper">
-            <table class="styled-table">
-              <thead>
-                <tr>
-                  <th>Username</th>
-                  <th>Group</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="user-list"></tbody>
-            </table>
+        <!-- FILTER PANEL -->
+        <div
+          class="bg-gray-900 p-4 mb-6 rounded-lg shadow-lg grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6"
+        >
+          <div>
+            <label class="block text-gray-400 mb-1">🔍 Prompt</label>
+            <input
+              id="filter-prompt"
+              type="text"
+              placeholder="Start typing…"
+              class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
           </div>
-        </section>
-
-        <!-- IMAGE MANAGEMENT -->
-        <section id="image-management" class="hidden section">
-          <h2>Manage Images</h2>
-
-          <!-- FILTER PANEL -->
+          <div>
+            <label class="block text-gray-400 mb-1">👤 User</label>
+            <input
+              id="filter-user"
+              type="text"
+              placeholder="Username"
+              class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-400 mb-1">📋 Status</label>
+            <select
+              id="filter-status"
+              class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="">Any</option>
+              <option value="completed">Completed</option>
+              <option value="pending">Pending</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
           <div
-            class="bg-gray-900 p-4 mb-6 rounded-lg shadow-lg grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6"
+            class="sm:col-span-2 lg:col-span-1 xl:col-span-2 grid grid-cols-2 gap-2"
           >
-            <!-- Prompt -->
             <div>
-              <label class="block text-gray-400 mb-1">🔍 Prompt</label>
+              <label class="block text-gray-400 mb-1">📅 Created from</label>
               <input
-                id="filter-prompt"
-                type="text"
-                placeholder="Start typing…"
+                id="filter-created-from"
+                type="date"
                 class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
-
-            <!-- UserSub -->
             <div>
-              <label class="block text-gray-400 mb-1">👤 User</label>
+              <label class="block text-gray-400 mb-1">to</label>
               <input
-                id="filter-user"
-                type="text"
-                placeholder="Username"
+                id="filter-created-to"
+                type="date"
                 class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
-
-            <!-- Status -->
+          </div>
+          <div
+            class="sm:col-span-2 lg:col-span-1 xl:col-span-2 grid grid-cols-2 gap-2"
+          >
             <div>
-              <label class="block text-gray-400 mb-1">📋 Status</label>
-              <select
-                id="filter-status"
+              <label class="block text-gray-400 mb-1">🔄 Updated from</label>
+              <input
+                id="filter-updated-from"
+                type="date"
                 class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              >
-                <option value="">Any</option>
-                <option value="completed">Completed</option>
-                <option value="pending">Pending</option>
-                <option value="failed">Failed</option>
-              </select>
+              />
             </div>
-
-            <!-- Created At -->
-            <div
-              class="sm:col-span-2 lg:col-span-1 xl:col-span-2 grid grid-cols-2 gap-2"
-            >
-              <div>
-                <label class="block text-gray-400 mb-1">📅 Created from</label>
-                <input
-                  id="filter-created-from"
-                  type="date"
-                  class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div>
-                <label class="block text-gray-400 mb-1">to</label>
-                <input
-                  id="filter-created-to"
-                  type="date"
-                  class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-            </div>
-
-            <!-- Updated At -->
-            <div
-              class="sm:col-span-2 lg:col-span-1 xl:col-span-2 grid grid-cols-2 gap-2"
-            >
-              <div>
-                <label class="block text-gray-400 mb-1">🔄 Updated from</label>
-                <input
-                  id="filter-updated-from"
-                  type="date"
-                  class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div>
-                <label class="block text-gray-400 mb-1">to</label>
-                <input
-                  id="filter-updated-to"
-                  type="date"
-                  class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-            </div>
-
-            <!-- Clear Filters -->
-            <div class="flex items-end">
-              <button
-                id="clear-filters"
-                class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
-                title="🧹 Clear filters"
-              >
-                🧹
-              </button>
+            <div>
+              <label class="block text-gray-400 mb-1">to</label>
+              <input
+                id="filter-updated-to"
+                type="date"
+                class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
             </div>
           </div>
-
-          <div class="table-wrapper">
-            <table class="styled-table">
-              <thead>
-                <tr>
-                  <th>Thumbnail</th>
-                  <th>Prompt</th>
-                  <th>User</th>
-                  <th>Created</th>
-                  <th>Updated</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="image-list"></tbody>
-            </table>
+          <div class="flex items-end">
+            <button
+              id="clear-filters"
+              class="w-full p-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              title="🧹 Clear filters"
+            >
+              🧹
+            </button>
           </div>
-          <div id="pager" class="pager"></div>
-        </section>
+        </div>
+
+        <!-- IMAGE TABLE -->
+        <div class="table-wrapper">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Thumbnail</th>
+                <th>Prompt</th>
+                <th>User</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="image-list"></tbody>
+          </table>
+        </div>
+        <div id="pager" class="pager"></div>
       </main>
     </div>
 

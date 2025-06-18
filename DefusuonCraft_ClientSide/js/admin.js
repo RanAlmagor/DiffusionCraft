@@ -22,61 +22,13 @@ const badge = (status) => {
   }">${status}</span>`;
 };
 
-/****************  SECTION TOGGLE  ****************/
-window.showSection = (id) => {
-  ["user-management", "image-management"].forEach((sec) => {
-    document.getElementById(sec)?.classList.add("hidden");
-  });
-  document.getElementById(id)?.classList.remove("hidden");
-};
-document.getElementById("link-users").addEventListener("click", () => {
-  showSection("user-management");
-});
-document.getElementById("link-images").addEventListener("click", () => {
-  showSection("image-management");
-});
-
-/****************  RENDER USERS (DEMO)  ****************/
-const demoUsers = [
-  { username: "John Doe", group: "Admin" },
-  { username: "Jane Smith", group: "User" },
-  { username: "Alice Johnson", group: "User" },
-];
-function renderUsers() {
-  const tbody = document.getElementById("user-list");
-  tbody.innerHTML = "";
-  demoUsers.forEach((u) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${u.username}</td>
-      <td>${u.group}</td>
-      <td class="actions td-actions">
-        <button class="btn edit-btn" onclick="editUser('${
-          u.username
-        }')"></button>
-        ${
-          u.group === "User"
-            ? `<button class="btn delete-btn" onclick="deleteUser('${u.username}')"></button>`
-            : ""
-        }
-      </td>`;
-    tbody.appendChild(tr);
-  });
-}
-function editUser(username) {
-  alert("Edit: " + username);
-}
-function deleteUser(username) {
-  if (!confirm(`Delete ${username}?`)) return;
-  alert("Deleted " + username);
-}
-
 /****************  FETCH & RENDER IMAGES  ****************/
 async function getImages() {
   const res = await fetch(API_IMAGES);
   if (!res.ok) throw new Error("Failed to fetch images");
   imagesCache = await res.json();
 }
+
 function renderPager() {
   const pager = document.getElementById("pager");
   pager.innerHTML = "";
@@ -98,7 +50,8 @@ function renderPager() {
     mkBtn(currentPage + 1, "Next →", currentPage === total)
   );
 }
-function renderPage(page) {
+
+function renderPage(page = 1) {
   currentPage = page;
   const start = (page - 1) * PAGE_SIZE;
   const slice = filteredCache.slice(start, start + PAGE_SIZE);
@@ -122,7 +75,7 @@ function renderPage(page) {
             }
           );
           const updatedAt = unwrap(item, "updatedAt");
-          const updatedStr = updatedAt
+          const updated = updatedAt
             ? new Date(updatedAt).toLocaleString("en-GB", {
                 day: "2-digit",
                 month: "short",
@@ -131,30 +84,31 @@ function renderPage(page) {
                 minute: "2-digit",
               })
             : "Not updated yet";
+
           return `
-          <tr data-id="${id}">
-            <td><img src="${url}" alt="" /></td>
-            <td class="truncate" title="${prompt}" id="prompt-${id}">${prompt}</td>
-            <td>${userSub}</td>
-            <td>${created}</td>
-            <td>${updatedStr}</td>
-            <td>${badge(unwrap(item, "status"))}</td>
-            <td class="td-actions">
-              <div class="actions">
-                <button class="btn edit-btn" onclick="startEditPrompt('${id}','${userSub}',\`${prompt}\`)"></button>
-                <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
-                <button class="btn download-btn" onclick="downloadImg('${url}',\`${prompt}\`)"></button>
-                <button class="btn delete-btn" onclick="deleteImg('${id}','${userSub}')"></button>
-              </div>
-            </td>
-          </tr>`;
+    <tr data-id="${id}">
+      <td><img src="${url}" alt="" /></td>
+      <td class="truncate" title="${prompt}" id="prompt-${id}">${prompt}</td>
+      <td>${userSub}</td>
+      <td>${created}</td>
+      <td>${updated}</td>
+      <td>${badge(unwrap(item, "status"))}</td>
+      <td class="td-actions">
+        <div class="actions">
+          <button class="btn edit-btn"    onclick="startEditPrompt('${id}','${userSub}',\`${prompt}\`)"></button>
+          <button class="btn zoom-btn"    onclick="zoom('${url}')"></button>
+          <button class="btn download-btn"onclick="downloadImg('${url}',\`${prompt}\`)"></button>
+          <button class="btn delete-btn"  onclick="deleteImg('${id}','${userSub}')"></button>
+        </div>
+      </td>
+    </tr>`;
         })
         .join("")
     : `<tr><td colspan="8" class="text-muted">No images found.</td></tr>`;
 
   renderPager();
 }
-/****************  INITIAL RENDER  ****************/
+
 async function renderImages() {
   try {
     await getImages();
@@ -163,82 +117,6 @@ async function renderImages() {
   } catch (e) {
     alert(e.message);
   }
-}
-
-/****************  TOAST & MODALS  ****************/
-function showToast(msg, color = "#00b8d8", emoji = "🎉") {
-  let toast = document.getElementById("toast-message");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.id = "toast-message";
-    document.body.appendChild(toast);
-  }
-  toast.innerText = `${emoji} ${msg}`;
-  toast.style.color = color;
-  toast.style.borderColor = color;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2500);
-}
-function zoom(src) {
-  const m = document.getElementById("zoom-modal");
-  document.getElementById("zoom-img").src = src;
-  m.classList.remove("hidden");
-  m.onclick = () => m.classList.add("hidden");
-}
-
-/****************  IMAGE ACTIONS  ****************/
-async function downloadImg(s3url, prompt) {
-  const key = s3url.split(".com/")[1];
-  if (!key) return alert("Invalid URL");
-  const res = await fetch(
-    `${API_DOWNLOAD}?imageKey=${encodeURIComponent(key)}`
-  );
-  const data = await res.json();
-  if (!data.downloadUrl) return alert("Download failed");
-  const a = document.createElement("a");
-  a.href = data.downloadUrl;
-  a.download = (prompt || "ai-image").replace(/\s+/g, "_") + ".png";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
-async function deleteImg(id, user) {
-  if (!confirm("Delete?")) return;
-  const res = await fetch(
-    "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal",
-    {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ imageId: id, userSub: user }),
-    }
-  );
-  if (!res.ok) return showToast("Delete failed", "var(--color-danger)", "❌");
-  document.querySelector(`tr[data-id="${id}"]`).remove();
-  showToast("Deleted!", "#00ff99", "🗑️");
-}
-
-/****************  EDIT PROMPT  ****************/
-function startEditPrompt(id, user, old) {
-  const td = document.getElementById(`prompt-${id}`);
-  td.innerHTML = `
-    <input type="text" id="input-${id}" value="${old}" class="prompt-input" />
-    <button class="btn" onclick="submitPromptEdit('${id}','${user}')">💾</button>
-  `;
-  setTimeout(() => document.getElementById(`input-${id}`).focus(), 0);
-}
-function submitPromptEdit(id, user) {
-  const newPrompt = document.getElementById(`input-${id}`).value;
-  fetch(API_IMAGES, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ imageId: id, userSub: user, newPrompt }),
-  })
-    .then((r) => r.json())
-    .then((_) => {
-      renderImages();
-      showToast("Prompt updated", "var(--color-primary)", "💾");
-    })
-    .catch((_) => showToast("Update failed", "var(--color-danger)", "❌"));
 }
 
 /****************  FILTER PANEL  ****************/
@@ -281,7 +159,7 @@ function applyFilters() {
   renderPage(1);
 }
 
-// debounce
+// debounce helper
 function debounce(fn, ms = 200) {
   let t;
   return (...a) => {
@@ -289,6 +167,7 @@ function debounce(fn, ms = 200) {
     t = setTimeout(() => fn(...a), ms);
   };
 }
+
 const debounced = debounce(applyFilters);
 [promptInput, userInput].forEach((el) =>
   el.addEventListener("input", debounced)
@@ -298,7 +177,6 @@ statusInput.addEventListener("change", applyFilters);
   el.addEventListener("change", applyFilters)
 );
 
-// clear filters
 document.getElementById("clear-filters").addEventListener("click", () => {
   [
     promptInput,
@@ -312,9 +190,83 @@ document.getElementById("clear-filters").addEventListener("click", () => {
   applyFilters();
 });
 
+/****************  IMAGE ACTIONS  ****************/
+async function downloadImg(s3url, prompt) {
+  const key = s3url.split(".com/")[1];
+  if (!key) return alert("Invalid URL");
+  const res = await fetch(
+    `${API_DOWNLOAD}?imageKey=${encodeURIComponent(key)}`
+  );
+  const data = await res.json();
+  if (!data.downloadUrl) return alert("Download failed");
+  const a = document.createElement("a");
+  a.href = data.downloadUrl;
+  a.download = (prompt || "ai-image").replace(/\s+/g, "_") + ".png";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function deleteImg(id, user) {
+  if (!confirm("Delete?")) return;
+  const res = await fetch(
+    "https://qw1foyfl98.execute-api.us-east-1.amazonaws.com/Prod/Images/Personal",
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageId: id, userSub: user }),
+    }
+  );
+  if (!res.ok) return showToast("Delete failed", "var(--color-danger)", "❌");
+  document.querySelector(`tr[data-id="${id}"]`).remove();
+  showToast("Deleted!", "#00ff99", "🗑️");
+}
+
+/****************  EDIT PROMPT  ****************/
+function startEditPrompt(id, user, old) {
+  const td = document.getElementById(`prompt-${id}`);
+  td.innerHTML = `<input type="text" id="input-${id}" value="${old}" class="prompt-input"/>
+                  <button class="btn" onclick="submitPromptEdit('${id}','${user}')">💾</button>`;
+  setTimeout(() => document.getElementById(`input-${id}`).focus(), 0);
+}
+function submitPromptEdit(id, user) {
+  const newPrompt = document.getElementById(`input-${id}`).value;
+  fetch(API_IMAGES, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ imageId: id, userSub: user, newPrompt }),
+  })
+    .then((r) => r.json())
+    .then((_) => {
+      renderImages();
+      showToast("Prompt updated", "var(--color-primary)", "💾");
+    })
+    .catch((_) => showToast("Update failed", "var(--color-danger)", "❌"));
+}
+
+/****************  ZOOM & TOAST  ****************/
+function zoom(src) {
+  const m = document.getElementById("zoom-modal");
+  document.getElementById("zoom-img").src = src;
+  m.classList.remove("hidden");
+  m.onclick = () => m.classList.add("hidden");
+}
+
+function showToast(msg, color = "#00b8d8", emoji = "🎉") {
+  let toast = document.getElementById("toast-message");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast-message";
+    document.body.appendChild(toast);
+  }
+  toast.innerText = `${emoji} ${msg}`;
+  toast.style.color = color;
+  toast.style.borderColor = color;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2500);
+}
+
 /****************  INIT  ****************/
 document.addEventListener("DOMContentLoaded", () => {
-  renderUsers();
   renderImages();
-  showSection("image-management");
 });

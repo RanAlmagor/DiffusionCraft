@@ -55,6 +55,12 @@ body {
   color: var(--text-muted);
   transition: 0.2s;
 }
+.navbar-nav .nav-link.dashboard::before {
+  content: "🏠";
+}
+.navbar-nav .nav-link.images::before {
+  content: "🖼️";
+}
 .navbar-nav .nav-link:hover {
   color: var(--color-primary);
   transform: translateY(-2px);
@@ -161,22 +167,18 @@ body {
   padding: var(--spacing);
 }
 
-/* ✅ התא שמחזיק את כל הכפתורים – יישור מושלם */
+/* ACTION BUTTONS CELL */
 .styled-table td.td-actions {
-  vertical-align: middle; /* אנכי באמצע */
-  padding: var(--spacing); /* ריווח אחיד */
+  vertical-align: middle;
+  padding: var(--spacing);
 }
-
-/* ✅ ה-wrapper שמסביב לכפתורים */
 .td-actions .actions {
   display: flex;
-  flex-direction: row; /* שורה */
-  align-items: center; /* אנכי באמצע התא */
-  justify-content: center; /* אופקי באמצע התא */
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 }
-
-/* ✅ עיצוב כל כפתור */
 .td-actions .btn {
   font-size: 1.4rem;
   width: 2.6rem;
@@ -196,8 +198,6 @@ body {
   transform: scale(1.1);
   box-shadow: 0 0 6px var(--color-primary);
 }
-
-/* אייקונים */
 .td-actions .edit-btn::before {
   content: "✏️";
 }
@@ -210,8 +210,6 @@ body {
 .td-actions .delete-btn::before {
   content: "🗑️";
 }
-
-/* צבעי רקע בהובר */
 .td-actions .edit-btn:hover {
   background: #ffd700;
 }
