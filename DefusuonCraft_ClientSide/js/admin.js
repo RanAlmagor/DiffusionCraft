@@ -22,14 +22,30 @@ const badge = (status) => {
 };
 
 /****************  SECTION TOGGLE  ****************/
+// עדכון הפונקציה כדי להציג רק את ניהול המשתמשים כאשר לוחצים על האימוג'י
 window.showSection = (id) => {
+  // הסתרה של כל הסקשנים
   ["user-management", "image-management"].forEach((sec) => {
     const el = document.getElementById(sec);
     if (el) el.classList.add("hidden");
   });
+
+  // הצגת הסקשן הנבחר
   const chosen = document.getElementById(id);
   if (chosen) chosen.classList.remove("hidden");
 };
+
+// קישור לאירוע של לחיצה על האימוג'י של ניהול משתמשים
+document
+  .getElementById("link-users") // אם זה לא אימוג'י אלא כפתור, השתמש ב-ID של הקישור
+  .addEventListener("click", () => {
+    showSection("user-management"); // הצגת ניהול משתמשים
+  });
+
+// קישור לאירוע של לחיצה על האימוג'י של ניהול תמונות (למקרה ותרצה להוסיף)
+document.getElementById("link-images").addEventListener("click", () => {
+  showSection("image-management"); // הצגת ניהול תמונות
+});
 
 /****************  RENDER USERS (DEMO)  ****************/
 const demoUsers = [
