@@ -1,23 +1,70 @@
-/* sidebar-navbar - navbar קבוע בצד שמאל */
+/* sidebar-navbar - navbar קבוע בצד שמאל בדסקטופ, הופך לתפריט נפתח במובייל */
 .sidebar-navbar {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
+  max-width: 80vw;
   width: 200px;
-  background: rgba(12, 12, 12, 0.95);
-  backdrop-filter: blur(10px);
-  border-right: 1px solid #00f2ff;
+  background: linear-gradient(180deg, #040c1a, #031826);
+  border-right: 2px solid #00f2ff;
   padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   z-index: 1000;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.25);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
   overflow: hidden;
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+@media (min-width: 768px) {
+  main,
+  .container,
+  .page-content {
+    margin-left: 200px; /* או הרוחב של הסיידבר */
+  }
+}
+/* כשהסרגל פתוח – הסתר את כפתור ההמבורגר */
+.sidebar-open #menu-toggle {
+  display: none;
 }
 
-/* סגנון לוגו ה-navbar */
+/* כפתור המבורגר */
+.menu-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: #00f2ff;
+  color: #000;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  z-index: 1100;
+  cursor: pointer;
+  display: none;
+  box-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff44;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.menu-toggle:hover {
+  background: #00e0e0;
+  box-shadow: 0 0 20px #00f2ff, 0 0 30px #00f2ff88;
+}
+
+@media (max-width: 768px) {
+  .sidebar-navbar {
+    transform: translateX(-100%);
+  }
+  .sidebar-navbar.open {
+    transform: translateX(0);
+  }
+  .menu-toggle {
+    display: block;
+  }
+}
+
+/* כותרת לוגו */
 .logo {
   font-size: 1.4rem;
   color: #00fff7;
@@ -27,7 +74,7 @@
   padding-left: 0.2rem;
 }
 
-/* סגנון ללינקים ב-navbar בצורה אנכית */
+/* לינקים אנכיים */
 .nav-links-vertical {
   display: flex;
   flex-direction: column;
@@ -35,7 +82,7 @@
   width: 100%;
 }
 
-/* סגנון ללינקים עצמם */
+/* כל לינק */
 .nav-link {
   color: #aaa;
   text-decoration: none;
@@ -50,7 +97,6 @@
   transition: all 0.3s ease;
 }
 
-/* אפקט hover על הלינקים */
 .nav-link:hover {
   color: #00fff7;
   background: rgba(0, 255, 247, 0.08);
@@ -59,7 +105,7 @@
   transform: translateX(2px);
 }
 
-/* הסתרת אלמנטים */
+/* הסתרה גמישה */
 .hidden {
   display: none !important;
 }

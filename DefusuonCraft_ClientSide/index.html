@@ -2,51 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- כבר קיים: viewport לרספונסיביות -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DefusionCraft Web</title>
+    <!-- כאן מניחים שה-css/style.css כולל Tailwind Utility-Classes -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/chat.css" />
     <link rel="stylesheet" href="css/image-card.css" />
     <link rel="stylesheet" href="css/navbar.css" />
   </head>
 
-  <body>
+  <body class="bg-[#020202] text-[#d0d0d0] font-orbitron">
     <!-- Navbar -->
-    <div id="navbar-container"></div>
+    <div id="navbar-container" class="w-full"></div>
+
+    <!-- Toast (עדכונים למטה) -->
     <div
       id="success-toast"
-      class="hidden fixed bottom-6 right-6 bg-black/80 text-lime-300 px-6 py-4 rounded-2xl shadow-2xl text-lg font-semibold z-50 animate-fade-in"
+      class="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-black/80 text-lime-300 px-4 md:px-6 py-3 md:py-4 rounded-2xl shadow-2xl text-base md:text-lg font-semibold z-50 opacity-0 pointer-events-none transition-all"
     >
       ✅ Prompt updated successfully!
     </div>
 
     <!-- Main Content -->
-    <main class="main-content">
-      <h2 class="section-title" style="margin-left: 300px">
-        Explore AI-Generated Art
-      </h2>
-      <div class="gallery" id="gallery"></div>
+    <main class="container mx-auto px-4 md:px-8 lg:px-12 py-8">
+      <!-- כותרת חצופה מרכזית ללא margin-left קבוע -->
+      <h2 class="section-title mx-auto max-w-max">Explore AI-Generated Art</h2>
 
-      <!-- Chat Container (ממוקם בתוך main לזרימה ריספונסיבית) -->
-      <div id="chat-container" class="chat-wrapper"></div>
+      <!-- Flex wrapper שמסדר גלריה ושיחה לצדדים בגדולים ומתחת בטלפון -->
+      <div class="mt-8 flex flex-col lg:flex-row gap-8">
+        <!-- גלריה -->
+        <div class="flex-1">
+          <div class="gallery" id="gallery"></div>
+        </div>
+
+        <!-- צ'אט -->
+        <aside class="w-full lg:w-1/3">
+          <div id="chat-container" class="chat-wrapper"></div>
+        </aside>
+      </div>
     </main>
 
     <!-- Zoom Modal -->
-    <div id="zoom-modal" class="hidden">
-      <div style="text-align: center">
-        <img id="zoom-image" src="#" alt="Zoomed Image" />
-        <div id="zoom-description"></div>
+    <div
+      id="zoom-modal"
+      class="hidden fixed inset-0 flex items-center justify-center p-4"
+    >
+      <div class="text-center">
+        <img
+          id="zoom-image"
+          class="max-w-full max-h-[80vh] rounded-xl shadow-xl border-2 border-teal-400"
+          src="#"
+          alt="Zoomed Image"
+        />
+        <div
+          id="zoom-description"
+          class="mt-4 p-4 max-h-[20vh] overflow-y-auto text-sm md:text-base bg-black/50 backdrop-blur-md rounded-lg text-teal-200"
+        ></div>
       </div>
-      <button id="close-modal">✖ Close</button>
+      <button
+        id="close-modal"
+        class="absolute top-4 right-4 bg-teal-400 text-black px-3 py-1 rounded-lg shadow-lg hover:bg-teal-300 transition"
+      >
+        ✖ Close
+      </button>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer text-center py-4 text-sm text-gray-500">
       &copy; 2025 DefusionCraft. All rights reserved.
     </footer>
 
     <!-- Scripts -->
-    <script src="js/login-handler.js"></script>
+    <script src="js/login-handler.js?v=3"></script>
     <script src="js/Homegallery-loader.js"></script>
     <script type="module" src="js/chat-loader.js"></script>
     <script type="module" src="js/navbar-loader.js"></script>

@@ -1,27 +1,67 @@
-<header class="sidebar-navbar">
-  <h1 class="logo">DefusionCraft</h1>
-  <span id="user-name" class="nav-link hidden"></span><br />
+<!-- ✅ Navbar עליון - מופיע רק במובייל -->
+<div
+  class="fixed top-0 left-0 w-full z-50 bg-black/90 text-white flex items-center justify-between px-4 py-3 shadow-md md:hidden"
+>
+  <!-- ☰ כפתור -->
+  <button
+    id="menu-toggle"
+    class="menu-toggle bg-cyan-400 text-black px-3 py-2 rounded-lg shadow hover:bg-cyan-300 transition"
+  >
+    ☰
+  </button>
 
-  <nav class="nav-links-vertical">
-    <!-- קישור קבוע לדף הבית -->
-    <a href="index.html" class="nav-link"> <span>Home</span> 🏠 </a>
+  <!-- לוגו -->
+  <div class="text-cyan-300 font-bold text-xl tracking-wide">DefusionCraft</div>
+</div>
 
-    <!-- קישורים דינמיים לפי סטטוס -->
-    <a href="gallery.html" id="personal-gallery-link" class="nav-link hidden">
-      <span>My Gallery</span> 🎨
+<!-- ✅ Sidebar נפרד (גם מובייל וגם דסקטופ) -->
+<header
+  id="sidebar"
+  class="sidebar-navbar pt-20 md:pt-6 transform -translate-x-full md:translate-x-0 fixed top-0 left-0 h-full w-64 bg-black text-white z-40 transition-transform duration-300 ease-in-out p-6"
+>
+  <!-- שם משתמש -->
+  <span
+    id="user-name"
+    class="nav-link hidden block mb-4 text-cyan-300 font-medium"
+  ></span>
+
+  <!-- תפריט ניווט -->
+  <nav class="nav-links-vertical flex flex-col gap-4 text-base">
+    <a
+      href="index.html"
+      id="home-link"
+      class="nav-link flex items-center gap-2"
+    >
+      🏠 <span>Home</span>
     </a>
-    <a href="admin.html" id="admin-link" class="nav-link hidden">
-      <span>Admin</span> 🛠
-    </a>
-    <a href="#" id="logout-link" class="nav-link hidden">
-      <span>Logout</span> 🚪
+
+    <a
+      href="gallery.html"
+      id="personal-gallery-link"
+      class="nav-link hidden flex items-center gap-2"
+    >
+      🎨 <span>My Gallery</span>
     </a>
     <a
-      href="https://us-east-1dnwmhmzpn.auth.us-east-1.amazoncognito.com/login/continue?client_id=3nnhk77f33vism7j0ou8o0oeka&redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Findex.html&response_type=token&scope=email+openid+profile"
-      id="login-link"
-      class="nav-link"
+      href="admin.html"
+      id="admin-link"
+      class="nav-link hidden flex items-center gap-2"
     >
-      <span>Login</span> 🔐
+      🛠 <span>Admin</span>
+    </a>
+    <a
+      href="#"
+      id="logout-link"
+      class="nav-link hidden flex items-center gap-2"
+    >
+      🚪 <span>Logout</span>
+    </a>
+    <a
+      href="https://us-east-1dnwmhmzpn.auth.us-east-1.amazoncognito.com/login/continue?client_id=3nnhk77f33vism7j0ou8o0oeka&redirect_uri=https%3A%2F%2Fdiffusioncraft-client.s3.us-east-1.amazonaws.com%2FDefusuonCraft_ClientSide%2Findex.html&response_type=token&scope=email+openid+profile"
+      id="login-link"
+      class="nav-link flex items-center gap-2"
+    >
+      🔐 <span>Login</span>
     </a>
   </nav>
 </header>
