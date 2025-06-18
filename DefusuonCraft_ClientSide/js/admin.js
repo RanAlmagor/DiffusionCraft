@@ -98,6 +98,7 @@ function renderPager() {
     mkBtn(currentPage + 1, "Next →", currentPage === total)
   );
 }
+
 function renderPage(page) {
   currentPage = page;
   const start = (page - 1) * PAGE_SIZE;
@@ -247,8 +248,11 @@ async function deleteImg(imageId, userSub, isAdmin = false) {
     const result = await response.json();
     console.log("✅ Image deleted:", result.message);
 
+    // עדכון הטבלה בצד לקוח לאחר מחיקה
+    const row = document.querySelector(`tr[data-id="${imageId}"]`);
+    if (row) row.remove();
+
     showToast("Image deleted successfully!", "#00ff99", "🗑️");
-    renderImages(); // ריענון הגלריה
   } catch (err) {
     console.error("❌ Delete failed:", err);
     showToast("Delete failed. Try again.", "#ff4f4f", "⚠️");
@@ -284,7 +288,23 @@ function submitPromptEdit(imageId, userSub) {
     })
     .then((json) => {
       console.log("✅ Success:", json);
+      // עדכון מיידי של הפרומפט
       document.getElementById(`prompt-${imageId}`).innerText = newPrompt;
+
+      // עדכון התאריך בעמודה "Updated At"
+      const updatedDate = new Date().toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      const updatedCell = document.getElementById(`updated-${imageId}`);
+      if (updatedCell) {
+        updatedCell.innerText = updatedDate;
+      }
+
       showToast("Prompt updated successfully!", "#00ff99", "💾");
     })
     .catch((err) => {
