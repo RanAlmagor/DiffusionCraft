@@ -6,6 +6,7 @@ const API_DOWNLOAD =
 const PAGE_SIZE = 12;
 
 let imagesCache = [];
+let filteredCache = [];
 let currentPage = 1;
 
 /****************  HELPERS  ****************/
@@ -36,15 +37,13 @@ window.showSection = (id) => {
 };
 
 // קישור לאירוע של לחיצה על האימוג'י של ניהול משתמשים
-document
-  .getElementById("link-users") // אם זה לא אימוג'י אלא כפתור, השתמש ב-ID של הקישור
-  .addEventListener("click", () => {
-    showSection("user-management"); // הצגת ניהול משתמשים
-  });
+document.getElementById("link-users").addEventListener("click", () => {
+  showSection("user-management");
+});
 
-// קישור לאירוע של לחיצה על האימוג'י של ניהול תמונות (למקרה ותרצה להוסיף)
+// קישור לאירוע של לחיצה על האימוג'י של ניהול תמונות
 document.getElementById("link-images").addEventListener("click", () => {
-  showSection("image-management"); // הצגת ניהול תמונות
+  showSection("image-management");
 });
 
 /****************  RENDER USERS (DEMO)  ****************/
@@ -84,7 +83,7 @@ function deleteUser(username) {
   alert("Deleted " + username);
 }
 
-/****************  FETCH & RENDER IMAGES  ****************/
+/****************  FETCH & INITIAL RENDER  ****************/
 async function getImages() {
   const res = await fetch(API_IMAGES);
   if (!res.ok) throw new Error("Failed to fetch images");
@@ -94,7 +93,7 @@ async function getImages() {
 function renderPager() {
   const pager = document.getElementById("pager");
   pager.innerHTML = "";
-  const total = Math.ceil(imagesCache.length / PAGE_SIZE);
+  const total = Math.ceil(filteredCache.length / PAGE_SIZE);
 
   const mkBtn = (p, label, disabled) =>
     `<button ${
@@ -117,13 +116,13 @@ function renderPager() {
 function renderPage(page) {
   currentPage = page;
   const start = (page - 1) * PAGE_SIZE;
-  const slice = imagesCache.slice(start, start + PAGE_SIZE);
+  const slice = filteredCache.slice(start, start + PAGE_SIZE);
 
   const tbody = document.getElementById("image-list");
   tbody.innerHTML = "";
 
   if (!slice.length) {
-    tbody.innerHTML = `<tr><td colspan="8" class="text-muted">No images found.</td></tr>`; // כאן נוסיף 8 עמודות במקום 7
+    tbody.innerHTML = `<tr><td colspan="8" class="text-muted">No images found.</td></tr>`;
   }
 
   slice.forEach((item) => {
@@ -133,7 +132,7 @@ function renderPage(page) {
     const url = unwrap(item, "s3url");
     const created = unwrap(item, "createdAt");
     const status = unwrap(item, "status");
-    const updatedAt = unwrap(item, "updatedAt"); // תאריך עדכון
+    const updatedAt = unwrap(item, "updatedAt");
     const dateStr = new Date(created).toLocaleString("en-GB", {
       day: "2-digit",
       month: "short",
@@ -141,7 +140,6 @@ function renderPage(page) {
       hour: "2-digit",
       minute: "2-digit",
     });
-
     const updatedDateStr = updatedAt
       ? new Date(updatedAt).toLocaleString("en-GB", {
           day: "2-digit",
@@ -150,7 +148,7 @@ function renderPage(page) {
           hour: "2-digit",
           minute: "2-digit",
         })
-      : "Not updated yet"; // אם אין תאריך עדכון, נציג "לא עודכן"
+      : "Not updated yet";
 
     const tr = document.createElement("tr");
     tr.setAttribute("data-id", id);
@@ -158,11 +156,10 @@ function renderPage(page) {
 
     tr.innerHTML = `
       <td><img src="${url}" alt="" /></td>
-      <!-- הוספת מחלקת truncate לכל פרומפט שארוך מדי -->
       <td class="truncate" title="${prompt}" id="prompt-${id}">${prompt}</td>
       <td>${userSub}</td>
       <td>${dateStr}</td>
-      <td>${updatedDateStr}</td> <!-- תאריך עדכון -->
+      <td>${updatedDateStr}</td>
       <td>${badge(status)}</td>
       <td class="actions">
         <button class="btn edit-btn" onclick="startEditPrompt('${id}', '${userSub}', \`${prompt}\`)"></button>
@@ -179,6 +176,8 @@ function renderPage(page) {
 async function renderImages() {
   try {
     await getImages();
+    // initialize filteredCache and render first page
+    filteredCache = imagesCache.slice();
     renderPage(1);
   } catch (e) {
     alert(e.message);
@@ -261,13 +260,7 @@ async function deleteImg(imageId, userSub, isAdmin = false) {
       return;
     }
 
-    const result = await response.json();
-    console.log("✅ Image deleted:", result.message);
-
-    // עדכון הטבלה בצד לקוח לאחר מחיקה
-    const row = document.querySelector(`tr[data-id="${imageId}"]`);
-    if (row) row.remove();
-
+    document.querySelector(`tr[data-id="${imageId}"]`)?.remove();
     showToast("Image deleted successfully!", "#00ff99", "🗑️");
   } catch (err) {
     console.error("❌ Delete failed:", err);
@@ -303,10 +296,8 @@ function submitPromptEdit(imageId, userSub) {
     })
     .then((json) => {
       console.log("✅ Success:", json);
-
-      // במקום לעדכן את הטבלה ידנית, פשוט נקרא ל renderImages
-      renderImages(); // רינדור מחדש של כל התמונות עם המידע המעודכן
-
+      // רינדור מחדש של כל התמונות עם המידע המעודכן
+      renderImages();
       showToast("Prompt updated successfully!", "#00ff99", "💾");
     })
     .catch((err) => {
@@ -314,6 +305,65 @@ function submitPromptEdit(imageId, userSub) {
       showToast("Failed to update image.", "#ff4f4f", "⚠️");
     });
 }
+
+/****************  FILTER PANEL WIRING  ****************/
+// grab filter inputs
+const promptInput = document.getElementById("filter-prompt");
+const userInput = document.getElementById("filter-user");
+const statusInput = document.getElementById("filter-status");
+const createdFrom = document.getElementById("filter-created-from");
+const createdTo = document.getElementById("filter-created-to");
+const updatedFrom = document.getElementById("filter-updated-from");
+const updatedTo = document.getElementById("filter-updated-to");
+
+// debounce helper
+function debounce(fn, delay = 200) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), delay);
+  };
+}
+
+function applyFilters() {
+  const term = promptInput.value.trim().toLowerCase();
+  const user = userInput.value.trim().toLowerCase();
+  const stat = statusInput.value;
+  const cFrom = createdFrom.value;
+  const cTo = createdTo.value;
+  const uFrom = updatedFrom.value;
+  const uTo = updatedTo.value;
+
+  filteredCache = imagesCache.filter((item) => {
+    const p = unwrap(item, "prompt").toLowerCase();
+    const u = unwrap(item, "userSub").toLowerCase();
+    const s = unwrap(item, "status");
+    const cr = new Date(unwrap(item, "createdAt"));
+    const up = unwrap(item, "updatedAt")
+      ? new Date(unwrap(item, "updatedAt"))
+      : null;
+
+    if (term && !p.includes(term)) return false;
+    if (user && !u.includes(user)) return false;
+    if (stat && s !== stat) return false;
+    if (cFrom && cr < new Date(cFrom)) return false;
+    if (cTo && cr > new Date(cTo)) return false;
+    if (uFrom && (!up || up < new Date(uFrom))) return false;
+    if (uTo && (!up || up > new Date(uTo))) return false;
+    return true;
+  });
+
+  renderPage(1);
+}
+
+const debouncedApply = debounce(applyFilters, 200);
+[promptInput, userInput].forEach((el) =>
+  el.addEventListener("input", debouncedApply)
+);
+statusInput.addEventListener("change", applyFilters);
+[createdFrom, createdTo, updatedFrom, updatedTo].forEach((el) =>
+  el.addEventListener("change", applyFilters)
+);
 
 /****************  INIT  ****************/
 document.addEventListener("DOMContentLoaded", () => {
