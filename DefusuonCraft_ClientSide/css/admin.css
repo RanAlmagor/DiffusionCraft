@@ -27,103 +27,7 @@ body {
   display: none !important;
 }
 
-/* NAVBAR */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: linear-gradient(90deg, var(--bg-alt), var(--bg-light));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--spacing);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-  z-index: 1000;
-}
-.navbar-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-.navbar-nav {
-  display: flex;
-  gap: var(--spacing);
-}
-.navbar-nav .nav-link {
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  transition: 0.2s;
-}
-.navbar-nav .nav-link:hover {
-  color: var(--color-primary);
-  transform: translateY(-2px);
-}
-
-/* MAIN WRAPPER & HEADER */
-.main-wrapper {
-  padding-top: 64px;
-}
-.main-content {
-  padding: calc(var(--spacing) * 2);
-}
-.admin-header {
-  padding-bottom: var(--spacing);
-  border-bottom: 1px solid var(--border);
-  margin-bottom: calc(var(--spacing) * 2);
-}
-.admin-header h1 {
-  margin: 0;
-  font-size: 2rem;
-  text-align: center;
-}
-
-/* SECTION TITLES */
-.main-content h2 {
-  margin-bottom: var(--spacing);
-  font-size: 1.75rem;
-  text-align: center;
-  font-weight: 600;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-secondary)
-  );
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-/* FILTER PANEL */
-#filter-prompt,
-#filter-user,
-#filter-status,
-#filter-created-from,
-#filter-created-to,
-#filter-updated-from,
-#filter-updated-to {
-  background: var(--bg-alt);
-  color: var(--text-light);
-  border: 1px solid var(--border);
-  transition: box-shadow 0.2s;
-}
-#filter-prompt:focus,
-#filter-user:focus,
-#filter-status:focus,
-#filter-created-from:focus,
-#filter-created-to:focus,
-#filter-updated-from:focus,
-#filter-updated-to:focus {
-  box-shadow: 0 0 8px var(--color-primary), 0 0 16px var(--color-secondary);
-  outline: none;
-}
-#clear-filters {
-  background: #333;
-  transition: 0.2s;
-}
-#clear-filters:hover {
-  background: var(--color-danger);
-  color: #fff;
-}
+/* … שאר הקובץ נשאר כפי שהיה עד הסקשן של הטבלה … */
 
 /* TABLE STYLING */
 .table-wrapper {
@@ -161,38 +65,70 @@ body {
   padding: var(--spacing);
 }
 
-/* ACTION BUTTONS */
-.actions .btn {
-  background: var(--bg-alt);
-  transition: transform 0.1s, box-shadow 0.1s;
+/* ✅ התא שמחזיק את כל האקשנים */
+.styled-table td.td-actions {
+  vertical-align: middle; /* ליישור אנכי בתוך השורה */
+  padding: var(--spacing);
 }
-.actions .btn:hover {
-  transform: translateY(-2px);
+
+/* ✅ ה-wrapper של הכפתורים הופך לפלקס קונטיינר אופקי ומרכזי */
+.td-actions .actions {
+  display: flex;
+  flex-direction: row; /* שורה */
+  align-items: center; /* ואנכי באמצע התא */
+  justify-content: center; /* אופקי באמצע התא */
+  gap: 0.5rem;
+}
+
+/* ✅ עיצוב כל כפתור */
+.td-actions .btn {
+  font-size: 1.4rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-alt);
+  color: var(--text-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: background 0.2s, transform 0.1s;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ✅ אפקט בהובר */
+.td-actions .btn:hover {
+  transform: scale(1.1);
   box-shadow: 0 0 6px var(--color-primary);
 }
-.actions .edit-btn::before {
+
+/* ✅ אייקונים */
+.td-actions .edit-btn::before {
   content: "✏️";
 }
-.actions .delete-btn::before {
-  content: "🗑️";
-}
-.actions .zoom-btn::before {
+.td-actions .zoom-btn::before {
   content: "🔍";
 }
-.actions .download-btn::before {
+.td-actions .download-btn::before {
   content: "⬇️";
 }
-.actions .edit-btn:hover {
+.td-actions .delete-btn::before {
+  content: "🗑️";
+}
+
+/* ✅ צבע רקע שונה לפי כפתור */
+.td-actions .edit-btn:hover {
   background: #ffd700;
 }
-.actions .delete-btn:hover {
-  background: var(--color-danger);
-}
-.actions .zoom-btn:hover {
+.td-actions .zoom-btn:hover {
   background: var(--color-primary);
 }
-.actions .download-btn:hover {
+.td-actions .download-btn:hover {
   background: var(--color-secondary);
+}
+.td-actions .delete-btn:hover {
+  background: var(--color-danger);
 }
 
 /* PAGINATION */

@@ -50,7 +50,7 @@ function renderUsers() {
     tr.innerHTML = `
       <td>${u.username}</td>
       <td>${u.group}</td>
-      <td class="actions">
+      <td class="actions td-actions">
         <button class="btn edit-btn" onclick="editUser('${
           u.username
         }')"></button>
@@ -103,6 +103,7 @@ function renderPage(page) {
   const start = (page - 1) * PAGE_SIZE;
   const slice = filteredCache.slice(start, start + PAGE_SIZE);
   const tbody = document.getElementById("image-list");
+
   tbody.innerHTML = slice.length
     ? slice
         .map((item) => {
@@ -138,18 +139,22 @@ function renderPage(page) {
             <td>${created}</td>
             <td>${updatedStr}</td>
             <td>${badge(unwrap(item, "status"))}</td>
-            <td class="actions">
-              <button class="btn edit-btn" onclick="startEditPrompt('${id}','${userSub}',\`${prompt}\`)"></button>
-              <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
-              <button class="btn download-btn" onclick="downloadImg('${url}',\`${prompt}\`)"></button>
-              <button class="btn delete-btn" onclick="deleteImg('${id}','${userSub}')"></button>
+            <td class="td-actions">
+              <div class="actions">
+                <button class="btn edit-btn" onclick="startEditPrompt('${id}','${userSub}',\`${prompt}\`)"></button>
+                <button class="btn zoom-btn" onclick="zoom('${url}')"></button>
+                <button class="btn download-btn" onclick="downloadImg('${url}',\`${prompt}\`)"></button>
+                <button class="btn delete-btn" onclick="deleteImg('${id}','${userSub}')"></button>
+              </div>
             </td>
           </tr>`;
         })
         .join("")
     : `<tr><td colspan="8" class="text-muted">No images found.</td></tr>`;
+
   renderPager();
 }
+/****************  INITIAL RENDER  ****************/
 async function renderImages() {
   try {
     await getImages();
