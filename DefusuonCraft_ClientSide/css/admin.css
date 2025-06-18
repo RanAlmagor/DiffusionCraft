@@ -27,7 +27,103 @@ body {
   display: none !important;
 }
 
-/* … שאר הקובץ נשאר כפי שהיה עד הסקשן של הטבלה … */
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: linear-gradient(90deg, var(--bg-alt), var(--bg-light));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+}
+.navbar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.navbar-nav {
+  display: flex;
+  gap: var(--spacing);
+}
+.navbar-nav .nav-link {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  transition: 0.2s;
+}
+.navbar-nav .nav-link:hover {
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+/* MAIN WRAPPER & HEADER */
+.main-wrapper {
+  padding-top: 64px;
+}
+.main-content {
+  padding: calc(var(--spacing) * 2);
+}
+.admin-header {
+  padding-bottom: var(--spacing);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: calc(var(--spacing) * 2);
+}
+.admin-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+/* SECTION TITLES */
+.main-content h2 {
+  margin-bottom: var(--spacing);
+  font-size: 1.75rem;
+  text-align: center;
+  font-weight: 600;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* FILTER PANEL */
+#filter-prompt,
+#filter-user,
+#filter-status,
+#filter-created-from,
+#filter-created-to,
+#filter-updated-from,
+#filter-updated-to {
+  background: var(--bg-alt);
+  color: var(--text-light);
+  border: 1px solid var(--border);
+  transition: box-shadow 0.2s;
+}
+#filter-prompt:focus,
+#filter-user:focus,
+#filter-status:focus,
+#filter-created-from:focus,
+#filter-created-to:focus,
+#filter-updated-from:focus,
+#filter-updated-to:focus {
+  box-shadow: 0 0 8px var(--color-primary), 0 0 16px var(--color-secondary);
+  outline: none;
+}
+#clear-filters {
+  background: #333;
+  transition: 0.2s;
+}
+#clear-filters:hover {
+  background: var(--color-danger);
+  color: #fff;
+}
 
 /* TABLE STYLING */
 .table-wrapper {
@@ -65,17 +161,17 @@ body {
   padding: var(--spacing);
 }
 
-/* ✅ התא שמחזיק את כל האקשנים */
+/* ✅ התא שמחזיק את כל הכפתורים – יישור מושלם */
 .styled-table td.td-actions {
-  vertical-align: middle; /* ליישור אנכי בתוך השורה */
-  padding: var(--spacing);
+  vertical-align: middle; /* אנכי באמצע */
+  padding: var(--spacing); /* ריווח אחיד */
 }
 
-/* ✅ ה-wrapper של הכפתורים הופך לפלקס קונטיינר אופקי ומרכזי */
+/* ✅ ה-wrapper שמסביב לכפתורים */
 .td-actions .actions {
   display: flex;
   flex-direction: row; /* שורה */
-  align-items: center; /* ואנכי באמצע התא */
+  align-items: center; /* אנכי באמצע התא */
   justify-content: center; /* אופקי באמצע התא */
   gap: 0.5rem;
 }
@@ -96,14 +192,12 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
-
-/* ✅ אפקט בהובר */
 .td-actions .btn:hover {
   transform: scale(1.1);
   box-shadow: 0 0 6px var(--color-primary);
 }
 
-/* ✅ אייקונים */
+/* אייקונים */
 .td-actions .edit-btn::before {
   content: "✏️";
 }
@@ -117,7 +211,7 @@ body {
   content: "🗑️";
 }
 
-/* ✅ צבע רקע שונה לפי כפתור */
+/* צבעי רקע בהובר */
 .td-actions .edit-btn:hover {
   background: #ffd700;
 }
@@ -198,7 +292,7 @@ body {
   color: var(--text-light);
 }
 
-/* TOAST MESSAGE – enlarged & emphasized */
+/* TOAST MESSAGE */
 #toast-message {
   position: fixed;
   top: 50%;
@@ -206,24 +300,22 @@ body {
   transform: translate(-50%, -50%);
   background: rgba(30, 30, 30, 0.95);
   color: var(--color-primary);
-  padding: 1.5rem 2rem; /* bigger padding */
-  border: 3px solid var(--color-primary); /* thicker border */
+  padding: 1.5rem 2rem;
+  border: 3px solid var(--color-primary);
   border-radius: 12px;
-  box-shadow: 0 0 16px var(--color-primary), 0 0 24px var(--color-secondary); /* stronger glow */
+  box-shadow: 0 0 16px var(--color-primary), 0 0 24px var(--color-secondary);
   font-family: "Orbitron", sans-serif;
-  font-weight: 900; /* bolder text */
-  font-size: 1.25rem; /* larger text */
+  font-weight: 900;
+  font-size: 1.25rem;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
 #toast-message.show {
   opacity: 1;
   pointer-events: auto;
   animation: popFade 2.5s ease forwards;
 }
-
 @keyframes popFade {
   0% {
     transform: translate(-50%, -50%) scale(0.8);
