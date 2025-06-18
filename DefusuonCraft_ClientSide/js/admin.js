@@ -98,7 +98,6 @@ function renderPager() {
     mkBtn(currentPage + 1, "Next →", currentPage === total)
   );
 }
-
 function renderPage(page) {
   currentPage = page;
   const start = (page - 1) * PAGE_SIZE;
@@ -143,7 +142,8 @@ function renderPage(page) {
 
     tr.innerHTML = `
       <td><img src="${url}" alt="" /></td>
-      <td class="truncate editable-prompt" data-full="${prompt}" id="prompt-${id}">${prompt}</td>
+      <!-- הוספת מחלקת truncate לכל פרומפט שארוך מדי -->
+      <td class="truncate" title="${prompt}" id="prompt-${id}">${prompt}</td>
       <td>${userSub}</td>
       <td>${dateStr}</td>
       <td>${updatedDateStr}</td> <!-- תאריך עדכון -->
