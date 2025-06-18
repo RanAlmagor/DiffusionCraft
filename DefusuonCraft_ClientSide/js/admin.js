@@ -269,7 +269,6 @@ function startEditPrompt(imageId, userSub, oldPrompt) {
 
   setTimeout(() => document.getElementById(`input-${imageId}`).focus(), 0);
 }
-
 function submitPromptEdit(imageId, userSub) {
   const input = document.getElementById(`input-${imageId}`);
   const newPrompt = input.value;
@@ -288,22 +287,9 @@ function submitPromptEdit(imageId, userSub) {
     })
     .then((json) => {
       console.log("✅ Success:", json);
-      // עדכון מיידי של הפרומפט
-      document.getElementById(`prompt-${imageId}`).innerText = newPrompt;
 
-      // עדכון התאריך בעמודה "Updated At"
-      const updatedDate = new Date().toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-
-      const updatedCell = document.getElementById(`updated-${imageId}`);
-      if (updatedCell) {
-        updatedCell.innerText = updatedDate;
-      }
+      // במקום לעדכן את הטבלה ידנית, פשוט נקרא ל renderImages
+      renderImages(); // רינדור מחדש של כל התמונות עם המידע המעודכן
 
       showToast("Prompt updated successfully!", "#00ff99", "💾");
     })
