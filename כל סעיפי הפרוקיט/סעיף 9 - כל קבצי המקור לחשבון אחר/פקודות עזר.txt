@@ -1,0 +1,18 @@
+# 📍 שלב 1 – מחיקת הקובץ הקיים והתיקייה הקודמת (אם קיימת)
+rm ~/DefusionCraft-IaC-Package.zip
+rm -rf ~/DefusionCraft
+
+# 📍 שלב 2 – העלה את הקובץ החדש ל־CloudShell
+# (דרך כפתור “Upload file” בפינה הימנית העליונה של CloudShell)
+
+# 📍 שלב 3 – חילוץ הקובץ מחדש
+unzip DefusionCraft-IaC-Package.zip -d DefusionCraft
+
+# 📍 שלב 4 – מעבר לתיקיית הסקריפטים
+cd ~/DefusionCraft/scripts
+
+# 📍 שלב 5 – הפיכת הקובץ להרצה
+chmod +x deploy.sh
+
+# 📍 שלב 6 – הרצת הסקריפט הראשי
+./deploy.sh
