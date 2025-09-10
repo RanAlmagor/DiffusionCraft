@@ -1,4 +1,4 @@
-בהחלט. הנה טיוטת קובץ `README.md` מקצועי עבור **התקנה מלאה** ו־**מחיקה מלאה** של מערכת DefusionCraft – מותאם במיוחד למבנה שלך ולפרויקט כמו שהוא כרגע בנוי עם CloudShell, CloudFormation, S3, Lambda, API Gateway וכו'.
+
 
 ---
 
