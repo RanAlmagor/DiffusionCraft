@@ -21,12 +21,6 @@ This is a standalone executable (`.exe`) that runs the local DefusionCraft worke
 
 - Once prompted, you must enter a **Hugging Face Token** to download the model.
 
-> 🧑‍🏫 **Instructor Use – you may use the token below for demo purposes**:
->
-> ```
-> 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
-> ```
-
 ---
 
 ## ℹ️ Requirements
