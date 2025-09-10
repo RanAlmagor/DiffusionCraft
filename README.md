@@ -121,5 +121,3 @@ _Crafted with precision for seamless deployment. Enjoy your journey into serverl
 
 ---
 
-רוצה שאכין מזה קובץ `README.md` מוכן להורדה או להוספה ישירה לתיקייה?
-```
